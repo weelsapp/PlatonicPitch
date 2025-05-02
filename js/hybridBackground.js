@@ -92,17 +92,7 @@ class HybridBackground {
     this.svgContainer.style.height = '100%';
     this.svgContainer.style.opacity = '0'; // Start invisible, will fade in
     
-    // Create mask div (will be on top of SVG)
-    this.maskDiv = document.createElement('div');
-    this.maskDiv.className = 'hybrid-background-mask';
-    this.maskDiv.style.position = 'absolute';
-    this.maskDiv.style.top = '0';
-    this.maskDiv.style.left = '0';
-    this.maskDiv.style.width = '100%';
-    this.maskDiv.style.height = '100%';
-    this.maskDiv.style.pointerEvents = 'none';
-    this.maskDiv.style.backgroundColor = this.options.color1; // Same as background
-    this.maskDiv.style.transition = 'background 0.1s ease'; // Smooth transition for gradient changes
+    // No mask div - hexagons will be visible across the entire section
     
     // Create canvas for highlight effect (will be on top of mask)
     this.highlightCanvas = document.createElement('canvas');
@@ -118,7 +108,6 @@ class HybridBackground {
     // Add elements to container in proper order (bottom to top)
     this.container.appendChild(this.baseGradient);
     this.container.appendChild(this.svgContainer);
-    this.container.appendChild(this.maskDiv);
     this.container.appendChild(this.highlightCanvas);
     
     // Add container to hero section instead of body
@@ -214,7 +203,6 @@ class HybridBackground {
     this.container.style.height = `${heroHeight}px`;
     this.baseGradient.style.height = `${heroHeight}px`;
     this.svgContainer.style.height = `${heroHeight}px`;
-    this.maskDiv.style.height = `${heroHeight}px`;
     
     // Set dimensions for highlight canvas
     this.width = heroWidth;
@@ -341,21 +329,7 @@ class HybridBackground {
     this.lastMouseY = this.mouse.y;
     this.needsUpdate = false;
     
-    // Calculate visibility radius (how far from mouse the hexagons are visible)
-    const visibilityRadius = Math.min(this.width, this.height) * this.options.visibilityRadius;
-    
-    // Update mask div with radial gradient
-    // This creates a "hole" in the mask where the hexagons are visible
-    // Using more color stops for a much smoother transition
-    this.maskDiv.style.background = `radial-gradient(
-      circle ${visibilityRadius}px at ${this.mouse.x}px ${this.mouse.y}px, 
-      rgba(12, 25, 45, 0) 0%, 
-      rgba(12, 25, 45, 0.1) 30%, 
-      rgba(12, 25, 45, 0.2) 50%, 
-      rgba(12, 25, 45, 0.4) 70%, 
-      rgba(12, 25, 45, 0.7) 85%, 
-      rgba(12, 25, 45, 1) 100%
-    )`;
+    // No mask div anymore - hexagons are visible across the entire section
     
     // ---- RENDER HIGHLIGHT CANVAS ----
     // Clear highlight canvas
