@@ -340,51 +340,7 @@ class CanvasBackground {
       }
     }
     
-    // Add noise texture with vertical gradient (more at bottom, less at top)
-    // Only in the hero section (first section with blue background)
-    if (this.options.noiseIntensity > 0) {
-      // Get the height of the hero section
-      const heroSection = document.querySelector('.hero-section');
-      if (!heroSection) return;
-      
-      const heroRect = heroSection.getBoundingClientRect();
-      const heroTop = heroRect.top + window.scrollY;
-      const heroBottom = heroRect.bottom + window.scrollY;
-      const heroHeight = heroRect.height;
-      
-      // Set composite operation to 'lighten' for more visible effect
-      this.ctx.globalCompositeOperation = 'lighten';
-      
-      // Use much smaller noise scale for finer detailed texture
-      const noiseScale = 8; // Much finer noise (was 20)
-      
-      // Only draw noise in the hero section
-      for (let x = 0; x < this.width; x += noiseScale) {
-        for (let y = heroTop; y < heroBottom; y += noiseScale) {
-          // Calculate vertical gradient factor (1 at bottom of hero, 0 at top)
-          // Invert the gradient (stronger at bottom, weaker at top)
-          const relativeY = y - heroTop; // Position relative to hero section top
-          const gradientFactor = relativeY / heroHeight;
-          
-          // Apply gradient to noise intensity (stronger at bottom)
-          const gradientIntensity = this.options.noiseIntensity * gradientFactor * 3;
-          
-          // Skip very low intensity areas for performance
-          if (gradientIntensity < 0.01) continue;
-          
-          this.ctx.globalAlpha = gradientIntensity;
-          
-          // Use more random noise with higher frequency
-          const noiseValue = this.noise(x * 1.5 + this.mouse.x * 0.01, y * 1.5 + this.mouse.y * 0.01);
-          
-          // Use a brighter light blue-white color for more visibility
-          this.ctx.fillStyle = `rgba(220, 240, 255, ${noiseValue * 0.3})`;
-          this.ctx.fillRect(x, y, noiseScale, noiseScale);
-        }
-      }
-      
-      this.ctx.globalAlpha = 1;
-    }
+    // Noise texture effect has been removed as requested
     
     // Reset composite operation
     this.ctx.globalCompositeOperation = 'source-over';
@@ -404,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightOpacity: 0.15,    // Very subtle highlight
     highlightSize: 0.5,        // Medium size highlight
     easing: 0.3,               // 2x faster mouse following as requested
-    noiseIntensity: 0.15,      // Moderate noise intensity for subtle effect
+    noiseIntensity: 0,         // Noise effect disabled
     
     // Hexagon grid options
     hexEnabled: true,          // Enable hexagon grid
