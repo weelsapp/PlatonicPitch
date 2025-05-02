@@ -12,12 +12,12 @@
   /* Removed outline border */
   border-radius: 8px; /* Slightly rounded edges */
   z-index: 9999;
-  backdrop-filter: blur(15px); /* Enhanced blur for frosted glass effect */
-  -webkit-backdrop-filter: blur(15px); /* Safari support */
+  backdrop-filter: blur(12px); /* Reduced blur for frosted glass effect (was 15px) */
+  -webkit-backdrop-filter: blur(12px); /* Safari support */
 }
 
 /* Add a pseudo-element for browsers that don't support backdrop-filter */
-@supports not (backdrop-filter: blur(15px)) {
+@supports not (backdrop-filter: blur(12px)) {
   .nav-container {
     background-color: rgba(12, 25, 45, 0.9); /* Fallback for browsers without backdrop-filter */
   }
@@ -146,8 +146,8 @@
     left: 0;
     width: 100%;
     background-color: rgba(12, 25, 45, 0.7); /* Match the updated nav-container background */
-    backdrop-filter: blur(15px); /* Match the nav-container blur */
-    -webkit-backdrop-filter: blur(15px); /* Safari support */
+    backdrop-filter: blur(12px); /* Match the nav-container blur */
+    -webkit-backdrop-filter: blur(12px); /* Safari support */
     /* Removed border to match main nav */
     border-top: none;
     padding: 1.5rem 0;
@@ -158,7 +158,7 @@
   }
   
   /* Fallback for browsers that don't support backdrop-filter */
-  @supports not (backdrop-filter: blur(15px)) {
+  @supports not (backdrop-filter: blur(12px)) {
     .nav-links.active {
       background-color: rgba(12, 25, 45, 0.9); /* Match the updated fallback */
     }
