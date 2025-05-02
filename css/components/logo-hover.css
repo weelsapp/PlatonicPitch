@@ -1,0 +1,66 @@
+/* Logo Hover Effect */
+
+.hero-logo {
+  position: relative;
+  transition: filter 0.3s ease;
+}
+
+/* Create a container for the hover effect */
+.hero-image-container {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+/* Create a pseudo-element for the outline effect */
+.hero-image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../../assets/images/hero-logo.svg') no-repeat center center;
+  background-size: contain;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  filter: 
+    brightness(1.5) 
+    drop-shadow(0 0 3px rgba(100, 150, 175, 0.8)) 
+    drop-shadow(0 0 5px rgba(84, 88, 166, 0.6));
+}
+
+/* Create a radial mask that follows the mouse */
+.hero-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle 80px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Show the outline effect on hover */
+.hero-image-container:hover::before {
+  opacity: 1;
+}
+
+/* Show the radial mask on hover */
+.hero-image-container:hover::after {
+  opacity: 1;
+}
+
+/* Apply a subtle filter to the original logo on hover */
+.hero-image-container:hover .hero-logo {
+  filter: contrast(0.8) brightness(0.9);
+}
