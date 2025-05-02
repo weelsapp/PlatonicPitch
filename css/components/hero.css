@@ -12,8 +12,9 @@
 }
 
 .hero-content {
-  flex: 1;
+  flex: 0.9; /* Reduced from 1 to 0.9 (90% of original width) */
   padding-right: 2rem;
+  max-width: 90%; /* Additional constraint to ensure it's 90% of available space */
 }
 
 .hero-image-container {
