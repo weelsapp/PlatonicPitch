@@ -251,14 +251,19 @@ class CanvasBackground {
   }
   
   /**
-   * Generate subtle noise
+   * Generate improved noise
    * @param {number} x - X coordinate
    * @param {number} y - Y coordinate
    * @returns {number} Noise value (0-1)
    */
   noise(x, y) {
-    // Simple noise function for subtle texture
-    return (Math.sin(x * 0.01) + Math.sin(y * 0.01)) * 0.5 + 0.5;
+    // Multi-frequency noise for more detailed texture
+    const noise1 = (Math.sin(x * 0.01) + Math.sin(y * 0.01)) * 0.5;
+    const noise2 = (Math.sin(x * 0.02 + 0.3) + Math.sin(y * 0.02 + 0.1)) * 0.25;
+    const noise3 = (Math.sin(x * 0.04 + 0.7) + Math.sin(y * 0.04 + 0.5)) * 0.125;
+    
+    // Combine different frequencies for more natural look
+    return (noise1 + noise2 + noise3) * 0.5 + 0.5;
   }
   
   /**
@@ -333,17 +338,30 @@ class CanvasBackground {
       }
     }
     
-    // Add subtle noise texture
+    // Add noise texture with vertical gradient (more at bottom, less at top)
     if (this.options.noiseIntensity > 0) {
-      this.ctx.globalCompositeOperation = 'overlay';
-      this.ctx.globalAlpha = this.options.noiseIntensity;
+      this.ctx.globalCompositeOperation = 'screen'; // 'screen' makes it lighter than background
       
       // Only calculate noise for a subsection of the screen for performance
-      const noiseScale = 100; // Lower = better performance, higher = more detailed noise
+      const noiseScale = 40; // Lower = more detailed noise (was 100)
+      
       for (let x = 0; x < this.width; x += noiseScale) {
         for (let y = 0; y < this.height; y += noiseScale) {
-          const noiseValue = this.noise(x + this.mouse.x * 0.05, y + this.mouse.y * 0.05);
-          this.ctx.fillStyle = `rgba(255, 255, 255, ${noiseValue * 0.05})`;
+          // Calculate vertical gradient factor (0 at top, 1 at bottom)
+          const gradientFactor = y / this.height;
+          
+          // Apply gradient to noise intensity (stronger at bottom)
+          const gradientIntensity = this.options.noiseIntensity * gradientFactor * 2;
+          
+          // Skip very low intensity areas for performance
+          if (gradientIntensity < 0.01) continue;
+          
+          this.ctx.globalAlpha = gradientIntensity;
+          
+          const noiseValue = this.noise(x + this.mouse.x * 0.02, y + this.mouse.y * 0.02);
+          
+          // Use a light blue-white color for the noise
+          this.ctx.fillStyle = `rgba(210, 230, 255, ${noiseValue * 0.15})`;
           this.ctx.fillRect(x, y, noiseScale, noiseScale);
         }
       }
@@ -369,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightOpacity: 0.15,    // Very subtle highlight
     highlightSize: 0.5,        // Medium size highlight
     easing: 0.3,               // 2x faster mouse following as requested
-    noiseIntensity: 0.01,      // Very subtle noise
+    noiseIntensity: 0.08,      // Increased noise intensity for vertical gradient effect
     
     // Hexagon grid options
     hexEnabled: true,          // Enable hexagon grid
