@@ -12,7 +12,7 @@ class CanvasBackground {
       highlightColor: '#3C4D70', // Highlight color for mouse interaction
       highlightOpacity: 0.15,   // Opacity of the highlight
       highlightSize: 0.5,       // Size of the highlight (0-1)
-      easing: 0.05,             // Easing factor for smooth movement (0-1)
+      easing: 0.1,              // Easing factor for smooth movement (0-1) - 2x faster
       noiseIntensity: 0.02,     // Subtle noise for texture (0-1)
       
       // Hexagon grid options
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gradient background options
     highlightOpacity: 0.15,    // Very subtle highlight
     highlightSize: 0.5,        // Medium size highlight
-    easing: 0.15,              // Faster mouse following as requested
+    easing: 0.3,               // 2x faster mouse following as requested
     noiseIntensity: 0.01,      // Very subtle noise
     
     // Hexagon grid options
