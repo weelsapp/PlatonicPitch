@@ -14,8 +14,8 @@ class HybridBackground {
       highlightSize: 0.33,      // Size of the highlight (0-1)
       easing: 0.3,              // Easing factor for smooth movement
       hexColor: '#2A4A6A',      // Color of hexagon outlines
-      hexOpacity: 0.5,          // Opacity of hexagons (increased for better visibility)
-      visibilityRadius: 0.2,    // Radius around mouse where hexagons are visible (0-1)
+      hexOpacity: 0.09,         // Opacity of hexagons (very subtle)
+      visibilityRadius: 0.3,    // Radius around mouse where hexagons are visible (0-1) - increased for smoother transition
     }, options);
     
     // Mouse position
@@ -182,10 +182,10 @@ class HybridBackground {
       this.svg.style.top = '0';
       this.svg.style.left = '0';
       
-      // Fade in SVG with full opacity (mask will handle visibility)
+      // Fade in SVG with reduced opacity (0.09)
       setTimeout(() => {
         this.svgContainer.style.transition = 'opacity 0.5s ease';
-        this.svgContainer.style.opacity = '1';
+        this.svgContainer.style.opacity = this.options.hexOpacity;
       }, 100);
     }
   }
@@ -346,10 +346,14 @@ class HybridBackground {
     
     // Update mask div with radial gradient
     // This creates a "hole" in the mask where the hexagons are visible
+    // Using more color stops for a much smoother transition
     this.maskDiv.style.background = `radial-gradient(
       circle ${visibilityRadius}px at ${this.mouse.x}px ${this.mouse.y}px, 
       rgba(12, 25, 45, 0) 0%, 
-      rgba(12, 25, 45, 0.5) 70%, 
+      rgba(12, 25, 45, 0.1) 30%, 
+      rgba(12, 25, 45, 0.2) 50%, 
+      rgba(12, 25, 45, 0.4) 70%, 
+      rgba(12, 25, 45, 0.7) 85%, 
       rgba(12, 25, 45, 1) 100%
     )`;
     
