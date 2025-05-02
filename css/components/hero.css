@@ -30,8 +30,8 @@
 }
 
 .hero-logo {
-  width: 30vw; /* 30% of viewport width */
-  max-width: 500px;
+  width: 27vw; /* Reduced from 30vw to 27vw (10% smaller) */
+  max-width: 450px; /* Reduced from 500px to 450px (10% smaller) */
   height: auto;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
   transform-style: preserve-3d; /* Enable 3D transformations */
