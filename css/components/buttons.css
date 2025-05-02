@@ -27,10 +27,28 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+@keyframes gradientLiquid {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 200% 50%;
+  }
+  75% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 /* Primary Button */
 .btn-primary {
-  background: linear-gradient(to right, #6496AF, #5458A6, #6496AF);
-  background-size: 200% 100%;
+  background: linear-gradient(to right, #6496AF, #5458A6, #6496AF, #5458A6, #6496AF);
+  background-size: 400% 100%;
   background-position: 0% 50%;
   color: white;
   border-radius: 4px; /* Slightly rounded edges */
@@ -41,11 +59,16 @@
   gap: 0.5rem;
   background-clip: padding-box; /* Prevent background from bleeding through */
   position: relative; /* For pseudo-element */
-  transition: background-position 0.75s ease-in-out;
+  transition: all 0.4s ease-out;
 }
 
 .btn-primary:hover {
-  background-position: 100% 50%;
+  animation: gradientLiquid 3s linear infinite;
+}
+
+.btn-primary:not(:hover) {
+  background-position: 0% 50%;
+  transition: background-position 0.4s ease-out;
 }
 
 /* Secondary Button */

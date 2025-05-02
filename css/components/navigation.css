@@ -80,16 +80,34 @@
   border-bottom: 1px solid white;
 }
 
+@keyframes gradientLiquid {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 200% 50%;
+  }
+  75% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .contact-button {
-  background: linear-gradient(to right, #6496AF, #5458A6, #6496AF);
-  background-size: 200% 100%;
+  background: linear-gradient(to right, #6496AF, #5458A6, #6496AF, #5458A6, #6496AF);
+  background-size: 400% 100%;
   background-position: 0% 50%;
   color: white;
   padding: 0.5rem 1.25rem;
   border-radius: 4px; /* Slightly rounded edges to match nav container */
   border: none; /* Remove border completely */
   font-weight: 300; /* Thinner font weight to match nav items */
-  transition: background-position 0.75s ease-in-out;
+  transition: all 0.4s ease-out;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -98,7 +116,12 @@
 }
 
 .contact-button:hover {
-  background-position: 100% 50%;
+  animation: gradientLiquid 3s linear infinite;
+}
+
+.contact-button:not(:hover) {
+  background-position: 0% 50%;
+  transition: background-position 0.4s ease-out;
 }
 
 .contact-icon {
