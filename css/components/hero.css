@@ -21,7 +21,9 @@
   align-items: center;
   min-height: 400px;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to allow 3D transforms to be visible */
+  transform-style: preserve-3d; /* Enable 3D space for children */
+  perspective: 1200px; /* Default perspective, will be set by JS */
 }
 
 .hero-logo {
@@ -29,6 +31,10 @@
   max-width: 500px;
   height: auto;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+  transform-style: preserve-3d; /* Enable 3D transformations */
+  will-change: transform; /* Hint for browser optimization */
+  transition: transform 0.1s ease-out; /* Smooth transitions */
+  transform-origin: center center; /* Rotate around center */
 }
 
 .hero-title {
