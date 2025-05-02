@@ -7,12 +7,20 @@
   right: 0;
   width: var(--nav-width);
   margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.05); /* Very light background for frosted look */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Thin white outline */
+  background-color: rgba(15, 34, 65, 0.3); /* Semi-transparent background for frosted look */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Thin white outline */
   border-radius: var(--nav-border-radius);
   z-index: 9999;
-  backdrop-filter: blur(10px); /* Enhanced blur for frosted glass effect */
+  backdrop-filter: blur(15px); /* Enhanced blur for frosted glass effect */
+  -webkit-backdrop-filter: blur(15px); /* Safari support */
+}
+
+/* Add a pseudo-element for browsers that don't support backdrop-filter */
+@supports not (backdrop-filter: blur(15px)) {
+  .nav-container {
+    background-color: rgba(15, 34, 65, 0.8); /* Fallback for browsers without backdrop-filter */
+  }
 }
 
 .navbar {
@@ -136,15 +144,23 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(15, 34, 65, 0.3); /* Match the nav-container background */
+    backdrop-filter: blur(15px); /* Match the nav-container blur */
+    -webkit-backdrop-filter: blur(15px); /* Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Match the nav-container border */
     border-top: none;
     padding: 1.5rem 0;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     gap: 1.5rem;
     z-index: 1000;
     border-radius: 0 0 var(--nav-border-radius) var(--nav-border-radius);
+  }
+  
+  /* Fallback for browsers that don't support backdrop-filter */
+  @supports not (backdrop-filter: blur(15px)) {
+    .nav-links.active {
+      background-color: rgba(15, 34, 65, 0.8); /* Fallback for browsers without backdrop-filter */
+    }
   }
   
   .nav-links.active .nav-item {
