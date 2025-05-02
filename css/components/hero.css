@@ -2,7 +2,7 @@
 
 .hero-section {
   min-height: 90vh;
-  padding: 10rem 0 5rem; /* Remove horizontal padding */
+  padding: 12rem 0 5rem; /* Increased from 10rem to 12rem to move content down */
   margin: 0 auto;
 }
 
@@ -80,7 +80,7 @@
 /* Media Queries */
 @media (max-width: 992px) {
   .hero-section {
-    padding-top: 9rem;
+    padding-top: 11rem; /* Increased from 9rem to 11rem to maintain proportion */
   }
   
   .hero-section .container {
@@ -112,7 +112,7 @@
   }
   
   .hero-section {
-    padding-top: 8rem;
+    padding-top: 10rem; /* Increased from 8rem to 10rem to maintain proportion */
     padding-bottom: 3rem;
   }
   
