@@ -83,22 +83,18 @@
 .contact-button {
   background: linear-gradient(to right, #6496AF, #5458A6, #6496AF);
   background-size: 200% 100%;
-  background-position: 0% 50%;
+  background-position: var(--x, 0% 50%);
   color: white;
   padding: 0.5rem 1.25rem;
   border-radius: 4px; /* Slightly rounded edges to match nav container */
   border: none; /* Remove border completely */
   font-weight: 300; /* Thinner font weight to match nav items */
-  transition: background-position 0.3s ease-out;
+  transition: background-position 0.5s ease-out;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   background-clip: padding-box; /* Prevent background from bleeding through */
   position: relative; /* For pseudo-element */
-}
-
-.contact-button:hover {
-  background-position: 100% 50%;
 }
 
 .contact-icon {
