@@ -11,7 +11,7 @@
   padding: 0.5rem 1.25rem;
   font-size: 1rem;
   line-height: 1.5;
-  border-radius: 0; /* Hard edges */
+  border-radius: 4px; /* Slightly rounded edges */
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -31,7 +31,7 @@
 .btn-primary {
   background: linear-gradient(to right, #6496AF, #5458A6);
   color: white;
-  border-radius: 0; /* Hard edges */
+  border-radius: 4px; /* Slightly rounded edges */
   border: none; /* Remove border completely */
   font-weight: 300; /* Thinner font weight */
   display: inline-flex;

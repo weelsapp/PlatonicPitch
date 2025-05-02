@@ -10,7 +10,7 @@
   background-color: rgba(15, 34, 65, 0.3); /* Semi-transparent background for frosted look */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.15); /* Thin white outline */
-  border-radius: var(--nav-border-radius);
+  border-radius: 8px; /* Slightly rounded edges */
   z-index: 9999;
   backdrop-filter: blur(15px); /* Enhanced blur for frosted glass effect */
   -webkit-backdrop-filter: blur(15px); /* Safari support */
@@ -84,7 +84,7 @@
   background: linear-gradient(to right, #6496AF, #5458A6);
   color: white;
   padding: 0.5rem 1.25rem;
-  border-radius: 0; /* Hard edges */
+  border-radius: 4px; /* Slightly rounded edges to match nav container */
   border: none; /* Remove border completely */
   font-weight: 300; /* Thinner font weight to match nav items */
   transition: opacity 0.3s ease;
@@ -153,7 +153,7 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     gap: 1.5rem;
     z-index: 1000;
-    border-radius: 0 0 var(--nav-border-radius) var(--nav-border-radius);
+    border-radius: 0 0 8px 8px; /* Match the nav-container border-radius */
   }
   
   /* Fallback for browsers that don't support backdrop-filter */
