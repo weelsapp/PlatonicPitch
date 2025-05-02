@@ -3,7 +3,7 @@
 .hero-section {
   display: flex;
   min-height: 90vh;
-  padding: 10rem 5% 5rem;
+  padding: 10rem 2.5% 5rem; /* Reduced side padding by half */
   max-width: 1400px;
   margin: 0 auto;
   align-items: center;
@@ -37,7 +37,16 @@
   line-height: 1.2;
   margin-bottom: 1.5rem;
   color: var(--color-primary);
-  font-weight: 600;
+  font-weight: 400; /* Reduced font weight */
+}
+
+/* Gradient text styling */
+.gradient-text {
+  background: linear-gradient(to right, #6496AF, #5458A6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block; /* Ensures the gradient spans the entire text */
 }
 
 .hero-subtitle {
