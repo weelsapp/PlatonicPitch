@@ -14,54 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /**
  * Initialize mouse-reactive background
- * Creates a dynamic gradient that follows the mouse cursor
+ * This function is now handled by hybridBackground.js
  */
 function initMouseReactiveBackground() {
-  // Get document dimensions
-  let docWidth = window.innerWidth;
-  let docHeight = window.innerHeight;
-  
-  // Update dimensions on window resize
-  window.addEventListener('resize', function() {
-    docWidth = window.innerWidth;
-    docHeight = window.innerHeight;
-  });
-  
-  // Set initial CSS variables for the gradient
-  document.documentElement.style.setProperty('--mouse-x', '50%');
-  document.documentElement.style.setProperty('--mouse-y', '50%');
-  document.documentElement.style.setProperty('--gradient-size', '0%');
-  
-  // Function to handle mouse movement
-  function handleMouseMove(e) {
-    // Calculate mouse position as percentage of viewport
-    const mouseX = (e.clientX / docWidth) * 100;
-    const mouseY = (e.clientY / docHeight) * 100;
-    
-    // Update CSS variables
-    document.documentElement.style.setProperty('--mouse-x', `${mouseX}%`);
-    document.documentElement.style.setProperty('--mouse-y', `${mouseY}%`);
-    document.documentElement.style.setProperty('--gradient-size', '50%');
-  }
-  
-  // Use requestAnimationFrame with a throttle for smoother performance
-  let lastUpdate = 0;
-  const throttleDelay = 50; // Increase delay to reduce updates and flickering
-  
-  document.addEventListener('mousemove', function(e) {
-    const now = Date.now();
-    if (now - lastUpdate > throttleDelay) {
-      window.requestAnimationFrame(function() {
-        handleMouseMove(e);
-      });
-      lastUpdate = now;
-    }
-  });
-  
-  // Add mouseout event listener to reset gradient when mouse leaves the window
-  document.addEventListener('mouseout', function() {
-    document.documentElement.style.setProperty('--gradient-size', '0%');
-  });
+  // This function is now a no-op as it's been replaced by hybridBackground.js
+  // No action needed here
 }
 
 /**

@@ -5,17 +5,27 @@
 
 class HybridBackground {
   constructor(options = {}) {
+    // Browser detection
+    this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    this.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1 && !this.isFirefox;
+    this.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && !this.isChrome;
+    
     // Default options
     this.options = Object.assign({
       color1: '#0C192D',        // Base background color
       color2: '#0A1525',        // Secondary background color
       highlightColor: '#3C4D70', // Highlight color for mouse interaction
-      highlightOpacity: 0.15,   // Opacity of the highlight
-      highlightSize: 0.33,      // Size of the highlight (0-1)
-      easing: 0.3,              // Easing factor for smooth movement
+      highlightOpacity: this.isFirefox ? 0.18 : 0.15,   // Slightly higher opacity for Firefox
+      highlightSize: this.isFirefox ? 0.38 : 0.33,      // Slightly larger highlight for Firefox
+      easing: this.isFirefox ? 0.25 : 0.3,              // Smoother easing for Firefox
       hexColor: '#2A4A6A',      // Color of hexagon outlines
       hexOpacity: 0.09,         // Opacity of hexagons (very subtle)
-      visibilityRadius: 0.3,    // Radius around mouse where hexagons are visible (0-1) - increased for smoother transition
+      visibilityRadius: 0.3,    // Radius around mouse where hexagons are visible (0-1)
+      // Firefox-specific rendering options
+      useBlur: this.isFirefox,  // Use blur effect for Firefox
+      blurAmount: 1.5,          // Blur amount in pixels
+      useMultiStopGradient: this.isFirefox, // Use more color stops for Firefox
+      throttleDelay: this.isFirefox ? 12 : 0, // Add throttling for Firefox
     }, options);
     
     // Mouse position
@@ -92,23 +102,33 @@ class HybridBackground {
     this.svgContainer.style.height = '100%';
     this.svgContainer.style.opacity = '0'; // Start invisible, will fade in
     
-    // No mask div - hexagons will be visible across the entire section
-    
-    // Create canvas for highlight effect (will be on top of mask)
-    this.highlightCanvas = document.createElement('canvas');
-    this.highlightCanvas.className = 'hybrid-background-highlight-canvas';
-    this.highlightCanvas.style.position = 'absolute';
-    this.highlightCanvas.style.top = '0';
-    this.highlightCanvas.style.left = '0';
-    this.highlightCanvas.style.width = '100%';
-    this.highlightCanvas.style.height = '100%';
-    this.highlightCanvas.style.pointerEvents = 'none';
-    this.highlightCtx = this.highlightCanvas.getContext('2d');
-    
-    // Add elements to container in proper order (bottom to top)
+    // Add base elements to container
     this.container.appendChild(this.baseGradient);
     this.container.appendChild(this.svgContainer);
-    this.container.appendChild(this.highlightCanvas);
+    
+    // Only create canvas for non-Firefox browsers
+    if (!this.isFirefox) {
+      // Create canvas for highlight effect
+      this.highlightCanvas = document.createElement('canvas');
+      this.highlightCanvas.className = 'hybrid-background-highlight-canvas';
+      this.highlightCanvas.style.position = 'absolute';
+      this.highlightCanvas.style.top = '0';
+      this.highlightCanvas.style.left = '0';
+      this.highlightCanvas.style.width = '100%';
+      this.highlightCanvas.style.height = '100%';
+      this.highlightCanvas.style.pointerEvents = 'none';
+      this.highlightCtx = this.highlightCanvas.getContext('2d');
+      
+      // Add canvas to container
+      this.container.appendChild(this.highlightCanvas);
+      
+      // Add mouse event listeners for animation
+      document.addEventListener('mousemove', this.handleMouseMove);
+      document.addEventListener('mouseleave', this.handleMouseLeave);
+    } else {
+      // For Firefox, we don't create the canvas or add mouse event listeners
+      console.log('Firefox detected - mouse animation disabled for better performance');
+    }
     
     // Add container to hero section instead of body
     this.heroSection.prepend(this.container);
@@ -119,13 +139,11 @@ class HybridBackground {
     // Set initial size
     this.handleResize();
     
-    // Add event listeners
+    // Add resize event listener (needed for all browsers)
     window.addEventListener('resize', this.handleResize);
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('mouseleave', this.handleMouseLeave);
     window.addEventListener('scroll', this.handleResize);
     
-    // Start animation
+    // Start animation (will be a no-op for Firefox)
     this.start();
   }
   
@@ -204,31 +222,46 @@ class HybridBackground {
     this.baseGradient.style.height = `${heroHeight}px`;
     this.svgContainer.style.height = `${heroHeight}px`;
     
-    // Set dimensions for highlight canvas
+    // Store dimensions for all browsers
     this.width = heroWidth;
     this.height = heroHeight;
     
-    // Set highlight canvas dimensions
-    this.highlightCanvas.style.width = '100%';
-    this.highlightCanvas.style.height = `${heroHeight}px`;
-    
-    // Set canvas resolution (considering device pixel ratio for retina displays)
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    
-    // Configure highlight canvas
-    this.highlightCanvas.width = this.width * dpr;
-    this.highlightCanvas.height = this.height * dpr;
-    this.highlightCtx.scale(dpr, dpr);
-    
-    // Force a render update
-    this.needsUpdate = true;
+    // Only update canvas for non-Firefox browsers
+    if (!this.isFirefox && this.highlightCanvas) {
+      // Set highlight canvas dimensions
+      this.highlightCanvas.style.width = '100%';
+      this.highlightCanvas.style.height = `${heroHeight}px`;
+      
+      // Set canvas resolution (considering device pixel ratio for retina displays)
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      
+      // Configure highlight canvas
+      this.highlightCanvas.width = this.width * dpr;
+      this.highlightCanvas.height = this.height * dpr;
+      this.highlightCtx.scale(dpr, dpr);
+      
+      // Force a render update
+      this.needsUpdate = true;
+    }
   }
+  
+  // Track last mouse move time for throttling
+  lastMouseMoveTime = 0;
   
   /**
    * Handle mouse movement
    * @param {MouseEvent} e - Mouse event
    */
   handleMouseMove(e) {
+    // Apply throttling for Firefox
+    if (this.isFirefox && this.options.throttleDelay > 0) {
+      const now = Date.now();
+      if (now - this.lastMouseMoveTime < this.options.throttleDelay) {
+        return;
+      }
+      this.lastMouseMoveTime = now;
+    }
+    
     // Get hero section bounds
     const heroRect = this.heroSection.getBoundingClientRect();
     
@@ -303,6 +336,21 @@ class HybridBackground {
   render() {
     if (!this.isRunning) return;
     
+    // Skip rendering for Firefox browsers
+    if (this.isFirefox) {
+      // No animation for Firefox - just keep the animation loop running
+      // to maintain compatibility with the rest of the code
+      this.animationFrame = requestAnimationFrame(this.render);
+      return;
+    }
+    
+    // For non-Firefox browsers, continue with the animation
+    if (!this.highlightCanvas || !this.highlightCtx) {
+      // Safety check - if canvas wasn't created, don't try to render
+      this.animationFrame = requestAnimationFrame(this.render);
+      return;
+    }
+    
     // Apply easing to mouse movement for smooth transitions
     this.mouse.x += (this.mouse.targetX - this.mouse.x) * this.options.easing;
     this.mouse.y += (this.mouse.targetY - this.mouse.y) * this.options.easing;
@@ -329,8 +377,6 @@ class HybridBackground {
     this.lastMouseY = this.mouse.y;
     this.needsUpdate = false;
     
-    // No mask div anymore - hexagons are visible across the entire section
-    
     // ---- RENDER HIGHLIGHT CANVAS ----
     // Clear highlight canvas
     this.highlightCtx.clearRect(0, 0, this.width, this.height);
@@ -342,13 +388,14 @@ class HybridBackground {
       this.mouse.x, this.mouse.y, highlightSize
     );
     
-    // Create highlight gradient
+    // Standard gradient
     highlightGradient.addColorStop(0, `rgba(60, 77, 112, ${this.options.highlightOpacity})`);
     highlightGradient.addColorStop(0.5, `rgba(60, 77, 112, ${this.options.highlightOpacity / 2})`);
     highlightGradient.addColorStop(1, 'rgba(60, 77, 112, 0)');
     
-    // Apply highlight gradient
+    // Use standard compositing
     this.highlightCtx.globalCompositeOperation = 'lighter';
+    
     this.highlightCtx.fillStyle = highlightGradient;
     this.highlightCtx.fillRect(0, 0, this.width, this.height);
     
@@ -362,6 +409,9 @@ class HybridBackground {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Detect browser
+  const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+  
   console.log('Hybrid background initializing...');
   
   // Detect if running on a mobile device or low-performance browser
@@ -379,6 +429,10 @@ document.addEventListener('DOMContentLoaded', () => {
     hexColor: '#2A4A6A',       // Color of hexagon outlines
     visibilityRadius: isLowPerformance ? 0.15 : 0.2, // Smaller radius on mobile
   });
+  
+  if (isFirefox) {
+    console.log('Firefox detected - using optimized rendering for Firefox');
+  }
   
   console.log('Hybrid background initialized successfully');
 });
