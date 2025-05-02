@@ -13,8 +13,20 @@ class CanvasBackground {
       highlightOpacity: 0.15,   // Opacity of the highlight
       highlightSize: 0.5,       // Size of the highlight (0-1)
       easing: 0.05,             // Easing factor for smooth movement (0-1)
-      noiseIntensity: 0.02      // Subtle noise for texture (0-1)
+      noiseIntensity: 0.02,     // Subtle noise for texture (0-1)
+      
+      // Hexagon grid options
+      hexEnabled: true,         // Enable hexagon grid
+      hexSize: 30,              // Size of hexagons (distance from center to corner)
+      hexColor: '#1A2A4A',      // Color of hexagon outlines
+      hexLineWidth: 1,          // Width of hexagon lines
+      hexOpacity: 0.5,          // Maximum opacity of hexagons
+      hexFadeRadius: 200,       // Radius of the fade effect around the mouse
+      hexGlow: 2                // Glow effect size (0 for no glow)
     }, options);
+    
+    // Hexagon grid
+    this.hexGrid = [];
 
     // Canvas setup
     this.canvas = document.createElement('canvas');
@@ -83,6 +95,95 @@ class CanvasBackground {
     this.canvas.width = this.width * dpr;
     this.canvas.height = this.height * dpr;
     this.ctx.scale(dpr, dpr);
+    
+    // Generate hexagon grid when size changes
+    if (this.options.hexEnabled) {
+      this.generateHexGrid();
+    }
+  }
+  
+  /**
+   * Generate hexagon grid
+   */
+  generateHexGrid() {
+    // Clear existing grid
+    this.hexGrid = [];
+    
+    const size = this.options.hexSize;
+    const width = this.width;
+    const height = this.height;
+    
+    // Calculate hexagon dimensions
+    const hexWidth = size * Math.sqrt(3);
+    const hexHeight = size * 2;
+    
+    // Calculate grid dimensions for 90-degree rotated grid
+    const rows = Math.ceil(height / (size * 1.5)) + 2;  // Add extra rows for partial visibility
+    const cols = Math.ceil(width / hexWidth) + 2;       // Add extra columns for partial visibility
+    
+    // Generate grid with offset for every other column (90-degree rotated grid)
+    for (let col = -1; col < cols; col++) {
+      for (let row = -1; row < rows; row++) {
+        // Calculate center position of hexagon
+        const x = col * hexWidth + (row % 2 === 0 ? 0 : hexWidth / 2);
+        const y = row * size * 1.5;
+        
+        // Add hexagon to grid
+        this.hexGrid.push({ x, y, size });
+      }
+    }
+    
+    console.log(`Generated hexagon grid with ${this.hexGrid.length} hexagons`);
+  }
+  
+  /**
+   * Draw a hexagon
+   * @param {number} x - Center X coordinate
+   * @param {number} y - Center Y coordinate
+   * @param {number} size - Size of hexagon (distance from center to corner)
+   * @param {number} opacity - Opacity of hexagon (0-1)
+   */
+  drawHexagon(x, y, size, opacity = 1) {
+    const ctx = this.ctx;
+    
+    // Save context
+    ctx.save();
+    
+    // Set line style
+    ctx.strokeStyle = this.options.hexColor;
+    ctx.lineWidth = this.options.hexLineWidth;
+    ctx.globalAlpha = opacity;
+    
+    // Add glow effect if enabled
+    if (this.options.hexGlow > 0) {
+      ctx.shadowColor = this.options.hexColor;
+      ctx.shadowBlur = this.options.hexGlow;
+    }
+    
+    // Begin path
+    ctx.beginPath();
+    
+    // Draw hexagon with 90 degree rotation
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3 + Math.PI / 2; // Add 90 degree rotation
+      const px = x + size * Math.cos(angle);
+      const py = y + size * Math.sin(angle);
+      
+      if (i === 0) {
+        ctx.moveTo(px, py);
+      } else {
+        ctx.lineTo(px, py);
+      }
+    }
+    
+    // Close path
+    ctx.closePath();
+    
+    // Stroke hexagon
+    ctx.stroke();
+    
+    // Restore context
+    ctx.restore();
   }
   
   /**
@@ -182,6 +283,40 @@ class CanvasBackground {
     this.ctx.fillStyle = radialGradient;
     this.ctx.fillRect(0, 0, this.width, this.height);
     
+    // Draw hexagon grid if enabled
+    if (this.options.hexEnabled && this.hexGrid.length > 0) {
+      // Reset composite operation for hexagons
+      this.ctx.globalCompositeOperation = 'source-over';
+      
+      // Draw each hexagon with opacity based on distance from mouse
+      const fadeRadius = this.options.hexFadeRadius;
+      const maxOpacity = this.options.hexOpacity;
+      
+      // Only draw hexagons within a certain distance from the mouse for performance
+      const visibilityRadius = fadeRadius * 1.5;
+      
+      for (const hex of this.hexGrid) {
+        // Calculate distance from mouse
+        const dx = hex.x - this.mouse.x;
+        const dy = hex.y - this.mouse.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Skip hexagons too far from mouse
+        if (distance > visibilityRadius) continue;
+        
+        // Calculate opacity based on distance
+        // Using exponential falloff for stronger fading effect
+        let opacity = 0;
+        if (distance < fadeRadius) {
+          // Exponential fade (cube) for stronger falloff
+          opacity = maxOpacity * Math.pow(1 - distance / fadeRadius, 3);
+          
+          // Draw hexagon with calculated opacity
+          this.drawHexagon(hex.x, hex.y, hex.size, opacity);
+        }
+      }
+    }
+    
     // Add subtle noise texture
     if (this.options.noiseIntensity > 0) {
       this.ctx.globalCompositeOperation = 'overlay';
@@ -212,12 +347,22 @@ class CanvasBackground {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Canvas background initializing...');
   
-  // Create background with default options
+  // Create background with custom options
   window.canvasBackground = new CanvasBackground({
-    highlightOpacity: 0.15, // Very subtle highlight
-    highlightSize: 0.5,     // Medium size highlight
-    easing: 0.08,           // Smooth movement
-    noiseIntensity: 0.01    // Very subtle noise
+    // Gradient background options
+    highlightOpacity: 0.15,    // Very subtle highlight
+    highlightSize: 0.5,        // Medium size highlight
+    easing: 0.08,              // Smooth movement
+    noiseIntensity: 0.01,      // Very subtle noise
+    
+    // Hexagon grid options
+    hexEnabled: true,          // Enable hexagon grid
+    hexSize: 20,               // Smaller hexagons for more detail
+    hexColor: '#2A4A6A',       // Brighter color for better visibility
+    hexLineWidth: 1.25,        // Thicker lines for visibility
+    hexOpacity: 0.1,           // Very low opacity as requested
+    hexFadeRadius: 250,        // Moderate fade radius
+    hexGlow: 2                 // Moderate glow effect
   });
   
   console.log('Canvas background initialized successfully');
