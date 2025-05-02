@@ -32,18 +32,21 @@
 }
 
 .hero-title {
-  font-size: 3rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
   line-height: 1.2;
   margin-bottom: 1.5rem;
   color: var(--color-primary);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .hero-subtitle {
+  font-family: 'Manrope', sans-serif;
   font-size: 1.25rem;
   line-height: 1.6;
   margin-bottom: 2rem;
-  color: var(--color-secondary);
+  color: white;
+  font-weight: 200; /* Thin weight */
 }
 
 .cta-button {
