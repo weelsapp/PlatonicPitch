@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.canvasBackground = new CanvasBackground({
     // Gradient background options
     highlightOpacity: 0.15,    // Very subtle highlight
-    highlightSize: 0.5,        // Medium size highlight
+    highlightSize: 0.33,       // Reduced by a third (was 0.5)
     easing: 0.3,               // 2x faster mouse following as requested
     noiseIntensity: 0,         // Noise effect disabled
     
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hexSize: 20,               // Smaller hexagons for more detail
     hexColor: '#2A4A6A',       // Brighter color for better visibility
     hexLineWidth: 1.25,        // Thicker lines for visibility
-    hexOpacity: 0.07,          // Subtle opacity as requested
+    hexOpacity: 0.09,          // Increased from 0.07 to 0.09
     hexFadeRadius: 500,        // Doubled fade radius (2x larger visible area)
     hexGlow: 2                 // Moderate glow effect
   });
