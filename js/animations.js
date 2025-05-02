@@ -6,9 +6,60 @@
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize animations when they're implemented
+  // Initialize animations
+  initMouseReactiveBackground();
   console.log('Animation system ready');
 });
+
+/**
+ * Initialize mouse-reactive background
+ * Creates a dynamic gradient that follows the mouse cursor
+ */
+function initMouseReactiveBackground() {
+  // Get document dimensions
+  let docWidth = window.innerWidth;
+  let docHeight = window.innerHeight;
+  
+  // Update dimensions on window resize
+  window.addEventListener('resize', function() {
+    docWidth = window.innerWidth;
+    docHeight = window.innerHeight;
+  });
+  
+  // Set initial CSS variables for the gradient
+  document.documentElement.style.setProperty('--mouse-x', '50%');
+  document.documentElement.style.setProperty('--mouse-y', '50%');
+  document.documentElement.style.setProperty('--gradient-size', '0%');
+  
+  // Function to handle mouse movement
+  function handleMouseMove(e) {
+    // Calculate mouse position as percentage of viewport
+    const mouseX = (e.clientX / docWidth) * 100;
+    const mouseY = (e.clientY / docHeight) * 100;
+    
+    // Update CSS variables
+    document.documentElement.style.setProperty('--mouse-x', `${mouseX}%`);
+    document.documentElement.style.setProperty('--mouse-y', `${mouseY}%`);
+    document.documentElement.style.setProperty('--gradient-size', '50%');
+  }
+  
+  // Use requestAnimationFrame for better performance
+  let ticking = false;
+  document.addEventListener('mousemove', function(e) {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        handleMouseMove(e);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  
+  // Add mouseout event listener to reset gradient when mouse leaves the window
+  document.addEventListener('mouseout', function() {
+    document.documentElement.style.setProperty('--gradient-size', '0%');
+  });
+}
 
 /**
  * Fade in element
