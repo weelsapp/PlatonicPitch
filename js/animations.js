@@ -43,15 +43,17 @@ function initMouseReactiveBackground() {
     document.documentElement.style.setProperty('--gradient-size', '50%');
   }
   
-  // Use requestAnimationFrame for better performance
-  let ticking = false;
+  // Use requestAnimationFrame with a throttle for smoother performance
+  let lastUpdate = 0;
+  const throttleDelay = 50; // Increase delay to reduce updates and flickering
+  
   document.addEventListener('mousemove', function(e) {
-    if (!ticking) {
+    const now = Date.now();
+    if (now - lastUpdate > throttleDelay) {
       window.requestAnimationFrame(function() {
         handleMouseMove(e);
-        ticking = false;
       });
-      ticking = true;
+      lastUpdate = now;
     }
   });
   
