@@ -43,18 +43,8 @@
 body {
   font-family: var(--font-primary);
   color: var(--color-primary);
-  background-color: var(--color-background);
-  background-image: 
-    radial-gradient(
-      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(60, 77, 112, 0.15) 0%, /* Reduced opacity by 4x */
-      rgba(60, 77, 112, 0.08) 15%,
-      transparent var(--gradient-size, 0%)
-    ),
-    linear-gradient(to bottom right, #0C192D, #0A1525);
+  background-color: var(--color-background); /* Canvas will handle the background effect */
   min-height: 100vh;
-  transition: background 0.5s ease-out; /* Increased transition duration for smoother effect */
-  background-attachment: fixed;
 }
 
 .container {
