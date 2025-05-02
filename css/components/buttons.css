@@ -29,7 +29,9 @@
 
 /* Primary Button */
 .btn-primary {
-  background: linear-gradient(to right, #6496AF, #5458A6);
+  background: linear-gradient(to right, #6496AF, #5458A6, #6496AF);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
   color: white;
   border-radius: 4px; /* Slightly rounded edges */
   border: none; /* Remove border completely */
@@ -39,10 +41,11 @@
   gap: 0.5rem;
   background-clip: padding-box; /* Prevent background from bleeding through */
   position: relative; /* For pseudo-element */
+  transition: background-position 0.75s ease-in-out;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background-position: 100% 50%;
 }
 
 /* Secondary Button */
