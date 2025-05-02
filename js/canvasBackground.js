@@ -293,6 +293,7 @@ class CanvasBackground {
       const maxOpacity = this.options.hexOpacity;
       
       // Only draw hexagons within a certain distance from the mouse for performance
+      // Using 1.5x the fade radius to ensure smooth edges
       const visibilityRadius = fadeRadius * 1.5;
       
       for (const hex of this.hexGrid) {
@@ -361,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hexColor: '#2A4A6A',       // Brighter color for better visibility
     hexLineWidth: 1.25,        // Thicker lines for visibility
     hexOpacity: 0.1,           // Very low opacity as requested
-    hexFadeRadius: 250,        // Moderate fade radius
+    hexFadeRadius: 500,        // Doubled fade radius (2x larger visible area)
     hexGlow: 2                 // Moderate glow effect
   });
   
