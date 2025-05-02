@@ -64,7 +64,7 @@ class CanvasBackground {
     this.canvas.style.left = '0';
     this.canvas.style.width = '100%';
     this.canvas.style.height = '100%';
-    this.canvas.style.zIndex = '-1';
+    this.canvas.style.zIndex = '1'; // Place above background but below content
     this.canvas.style.pointerEvents = 'none'; // Allow interactions with elements below
     
     // Add canvas to DOM
@@ -339,29 +339,44 @@ class CanvasBackground {
     }
     
     // Add noise texture with vertical gradient (more at bottom, less at top)
+    // Only in the hero section (first section with blue background)
     if (this.options.noiseIntensity > 0) {
-      this.ctx.globalCompositeOperation = 'screen'; // 'screen' makes it lighter than background
+      // Get the height of the hero section
+      const heroSection = document.querySelector('.hero-section');
+      if (!heroSection) return;
       
-      // Only calculate noise for a subsection of the screen for performance
-      const noiseScale = 40; // Lower = more detailed noise (was 100)
+      const heroRect = heroSection.getBoundingClientRect();
+      const heroTop = heroRect.top + window.scrollY;
+      const heroBottom = heroRect.bottom + window.scrollY;
+      const heroHeight = heroRect.height;
       
+      // Set composite operation to 'lighten' for more visible effect
+      this.ctx.globalCompositeOperation = 'lighten';
+      
+      // Use smaller noise scale for more detailed texture
+      const noiseScale = 20; // Even more detailed noise (was 40)
+      
+      // Only draw noise in the hero section
       for (let x = 0; x < this.width; x += noiseScale) {
-        for (let y = 0; y < this.height; y += noiseScale) {
-          // Calculate vertical gradient factor (0 at top, 1 at bottom)
-          const gradientFactor = y / this.height;
+        for (let y = heroTop; y < heroBottom; y += noiseScale) {
+          // Calculate vertical gradient factor (1 at bottom of hero, 0 at top)
+          // Invert the gradient (stronger at bottom, weaker at top)
+          const relativeY = y - heroTop; // Position relative to hero section top
+          const gradientFactor = relativeY / heroHeight;
           
           // Apply gradient to noise intensity (stronger at bottom)
-          const gradientIntensity = this.options.noiseIntensity * gradientFactor * 2;
+          const gradientIntensity = this.options.noiseIntensity * gradientFactor * 3;
           
           // Skip very low intensity areas for performance
           if (gradientIntensity < 0.01) continue;
           
           this.ctx.globalAlpha = gradientIntensity;
           
-          const noiseValue = this.noise(x + this.mouse.x * 0.02, y + this.mouse.y * 0.02);
+          // Use more random noise with higher frequency
+          const noiseValue = this.noise(x * 1.5 + this.mouse.x * 0.01, y * 1.5 + this.mouse.y * 0.01);
           
-          // Use a light blue-white color for the noise
-          this.ctx.fillStyle = `rgba(210, 230, 255, ${noiseValue * 0.15})`;
+          // Use a brighter light blue-white color for more visibility
+          this.ctx.fillStyle = `rgba(220, 240, 255, ${noiseValue * 0.3})`;
           this.ctx.fillRect(x, y, noiseScale, noiseScale);
         }
       }
@@ -387,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightOpacity: 0.15,    // Very subtle highlight
     highlightSize: 0.5,        // Medium size highlight
     easing: 0.3,               // 2x faster mouse following as requested
-    noiseIntensity: 0.08,      // Increased noise intensity for vertical gradient effect
+    noiseIntensity: 0.25,      // Significantly increased noise intensity for better visibility
     
     // Hexagon grid options
     hexEnabled: true,          // Enable hexagon grid
