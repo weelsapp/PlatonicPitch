@@ -93,8 +93,19 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 50%;
-  background: linear-gradient(to right, #6496AF, #5458A6);
+}
+
+.feature-icon img,
+.feature-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.feature-icon svg path,
+.feature-icon svg rect,
+.feature-icon svg circle,
+.feature-icon svg polygon {
+  fill: url(#icon-gradient);
 }
 
 .feature-title {
