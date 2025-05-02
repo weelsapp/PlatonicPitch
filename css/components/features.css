@@ -5,6 +5,9 @@
   color: #333;
   padding: 6rem 0;
   position: relative;
+  z-index: 1; /* Ensure it's above the canvas background */
+  box-shadow: 0 0 0 100vmax #fff; /* Extend the background color beyond the section */
+  clip-path: inset(0 -100vmax); /* Clip the box-shadow to only show within the section */
 }
 
 .features-header {
