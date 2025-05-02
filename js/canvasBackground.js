@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hexSize: 20,               // Smaller hexagons for more detail
     hexColor: '#2A4A6A',       // Brighter color for better visibility
     hexLineWidth: 1.25,        // Thicker lines for visibility
-    hexOpacity: 0.5,           // Higher visibility as requested
+    hexOpacity: 0.05,          // Very subtle opacity as requested
     hexFadeRadius: 500,        // Doubled fade radius (2x larger visible area)
     hexGlow: 2                 // Moderate glow effect
   });
