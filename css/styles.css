@@ -39,12 +39,13 @@
   --nav-width: 75%;
   --nav-top-margin: 2rem; /* Doubled from 1rem to 2rem */
   --nav-border-radius: 0px; /* Squared edges */
+  --nav-safe-area: calc(var(--nav-top-margin) + 4rem + 1rem); /* nav margin + nav height + buffer */
 }
 
 body {
   font-family: var(--font-primary);
   color: var(--color-primary);
-  background-color: var(--color-background); /* Canvas will handle the background effect */
+  background-color: #fff; /* Default white background */
   min-height: 100vh;
 }
 

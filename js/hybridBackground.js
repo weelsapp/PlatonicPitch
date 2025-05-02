@@ -43,6 +43,22 @@ class HybridBackground {
    * Initialize the hybrid background
    */
   init() {
+    // Find the hero section
+    this.heroSection = document.querySelector('.hero-section');
+    if (!this.heroSection) {
+      console.error('Hero section not found');
+      return;
+    }
+    
+    // Set hero section background color to transparent
+    // (we'll handle the background with our gradient)
+    this.heroSection.style.backgroundColor = 'transparent';
+    
+    // Make sure hero section has position relative for proper positioning
+    if (getComputedStyle(this.heroSection).position === 'static') {
+      this.heroSection.style.position = 'relative';
+    }
+    
     // Create container
     this.container = document.createElement('div');
     this.container.className = 'hybrid-background';
@@ -90,8 +106,8 @@ class HybridBackground {
     this.container.appendChild(this.svgContainer);
     this.container.appendChild(this.canvas);
     
-    // Add container to DOM
-    document.body.prepend(this.container);
+    // Add container to hero section instead of body
+    this.heroSection.prepend(this.container);
     
     // Load SVG
     this.loadSvg();
@@ -166,24 +182,22 @@ class HybridBackground {
     }
     this.lastResizeTime = now;
     
-    // Get document height
-    const docHeight = Math.max(
-      document.body.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.clientHeight,
-      document.documentElement.scrollHeight,
-      document.documentElement.offsetHeight
-    );
+    // Get hero section dimensions
+    const heroRect = this.heroSection.getBoundingClientRect();
+    const heroHeight = this.heroSection.offsetHeight;
+    const heroWidth = this.heroSection.offsetWidth;
     
-    // Update container height
-    this.container.style.height = `${docHeight}px`;
-    this.baseGradient.style.height = `${docHeight}px`;
-    this.svgContainer.style.height = `${docHeight}px`;
+    // Update container dimensions to match hero section
+    this.container.style.width = '100%';
+    this.container.style.height = `${heroHeight}px`;
+    this.baseGradient.style.height = `${heroHeight}px`;
+    this.svgContainer.style.height = `${heroHeight}px`;
     
     // Set canvas dimensions
-    this.width = window.innerWidth;
-    this.height = docHeight;
-    this.canvas.style.height = `${docHeight}px`;
+    this.width = heroWidth;
+    this.height = heroHeight;
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = `${heroHeight}px`;
     
     // Set canvas resolution (considering device pixel ratio for retina displays)
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -200,18 +214,34 @@ class HybridBackground {
    * @param {MouseEvent} e - Mouse event
    */
   handleMouseMove(e) {
-    // Get mouse position relative to the document (including scroll)
-    this.mouse.targetX = e.clientX;
-    this.mouse.targetY = e.clientY + window.scrollY;
+    // Get hero section bounds
+    const heroRect = this.heroSection.getBoundingClientRect();
+    
+    // Check if mouse is within hero section
+    const isInHeroSection = 
+      e.clientX >= heroRect.left && 
+      e.clientX <= heroRect.right && 
+      e.clientY >= heroRect.top && 
+      e.clientY <= heroRect.bottom;
+    
+    if (isInHeroSection) {
+      // Convert mouse position to be relative to the hero section
+      const relativeX = e.clientX - heroRect.left;
+      const relativeY = e.clientY - heroRect.top;
+      
+      // Update mouse target position
+      this.mouse.targetX = relativeX;
+      this.mouse.targetY = relativeY;
+    }
   }
   
   /**
    * Handle mouse leaving the window
    */
   handleMouseLeave() {
-    // Reset to center of current viewport when mouse leaves
-    this.mouse.targetX = window.innerWidth / 2;
-    this.mouse.targetY = window.scrollY + window.innerHeight / 2;
+    // Reset to center of hero section when mouse leaves
+    this.mouse.targetX = this.width / 2;
+    this.mouse.targetY = this.height / 2;
   }
   
   /**

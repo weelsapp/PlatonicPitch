@@ -1,9 +1,16 @@
 /* Hero Component Styles */
 
 .hero-section {
-  min-height: 90vh;
-  padding: 14rem 0 5rem; /* Increased from 12rem to 14rem to move content down more */
+  min-height: calc(100vh - var(--nav-safe-area)); /* Viewport height minus safe area */
+  padding-top: var(--nav-safe-area); /* Use safe area as top padding */
+  padding-bottom: 5rem;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative; /* Ensure position is relative for absolute positioning of background */
+  background-color: var(--color-background); /* Set background color as fallback */
+  overflow: hidden; /* Ensure background stays within bounds */
 }
 
 .hero-section .container {
@@ -81,7 +88,7 @@
 /* Media Queries */
 @media (max-width: 992px) {
   .hero-section {
-    padding-top: 13rem; /* Increased from 11rem to 13rem to maintain proportion */
+    padding-top: var(--nav-safe-area); /* Use the same safe area variable */
   }
   
   .hero-section .container {
@@ -113,7 +120,7 @@
   }
   
   .hero-section {
-    padding-top: 12rem; /* Increased from 10rem to 12rem to maintain proportion */
+    padding-top: var(--nav-safe-area); /* Use the same safe area variable */
     padding-bottom: 3rem;
   }
   
