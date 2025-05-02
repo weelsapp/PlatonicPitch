@@ -7,19 +7,19 @@
   right: 0;
   width: var(--nav-width);
   margin: 0 auto;
-  background-color: rgba(12, 25, 45, 0.5); /* #0C192D with 50% opacity (reduced from 70%) */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background-color: rgba(12, 25, 45, 0.3); /* #0C192D with 30% opacity (reduced from 50%) */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Reduced shadow opacity to match */
   /* Removed outline border */
   border-radius: 8px; /* Slightly rounded edges */
   z-index: 9999;
-  backdrop-filter: blur(12px); /* Reduced blur for frosted glass effect (was 15px) */
-  -webkit-backdrop-filter: blur(12px); /* Safari support */
+  backdrop-filter: blur(10px); /* Reduced blur for more transparency (was 12px) */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
 }
 
 /* Add a pseudo-element for browsers that don't support backdrop-filter */
-@supports not (backdrop-filter: blur(12px)) {
+@supports not (backdrop-filter: blur(10px)) {
   .nav-container {
-    background-color: rgba(12, 25, 45, 0.9); /* Fallback for browsers without backdrop-filter */
+    background-color: rgba(12, 25, 45, 0.8); /* Fallback for browsers without backdrop-filter */
   }
 }
 
@@ -145,22 +145,22 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: rgba(12, 25, 45, 0.5); /* Match the updated nav-container background */
-    backdrop-filter: blur(12px); /* Match the nav-container blur */
-    -webkit-backdrop-filter: blur(12px); /* Safari support */
+    background-color: rgba(12, 25, 45, 0.3); /* Match the updated nav-container background */
+    backdrop-filter: blur(10px); /* Match the nav-container blur */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
     /* Removed border to match main nav */
     border-top: none;
     padding: 1.5rem 0;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Reduced shadow opacity to match */
     gap: 1.5rem;
     z-index: 1000;
     border-radius: 0 0 8px 8px; /* Match the nav-container border-radius */
   }
   
   /* Fallback for browsers that don't support backdrop-filter */
-  @supports not (backdrop-filter: blur(12px)) {
+  @supports not (backdrop-filter: blur(10px)) {
     .nav-links.active {
-      background-color: rgba(12, 25, 45, 0.9); /* Match the updated fallback */
+      background-color: rgba(12, 25, 45, 0.8); /* Slightly more opaque for readability */
     }
   }
   
