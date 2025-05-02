@@ -74,16 +74,7 @@
   position: relative;
 }
 
-.feature-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(to right, #6496AF, #5458A6);
-  border-radius: 3px 3px 0 0;
-}
+/* Gradient top border removed as requested */
 
 .feature-icon {
   width: 30px;
