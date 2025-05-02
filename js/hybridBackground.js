@@ -14,7 +14,8 @@ class HybridBackground {
       highlightSize: 0.33,      // Size of the highlight (0-1)
       easing: 0.3,              // Easing factor for smooth movement
       hexColor: '#2A4A6A',      // Color of hexagon outlines
-      hexOpacity: 0.09,         // Opacity of hexagons
+      hexOpacity: 0.5,          // Opacity of hexagons (increased for better visibility)
+      visibilityRadius: 0.2,    // Radius around mouse where hexagons are visible (0-1)
     }, options);
     
     // Mouse position
@@ -89,22 +90,36 @@ class HybridBackground {
     this.svgContainer.style.left = '0';
     this.svgContainer.style.width = '100%';
     this.svgContainer.style.height = '100%';
-    this.svgContainer.style.opacity = '0'; // Start invisible
+    this.svgContainer.style.opacity = '0'; // Start invisible, will fade in
     
-    // Create canvas for highlight effect
-    this.canvas = document.createElement('canvas');
-    this.canvas.className = 'hybrid-background-canvas';
-    this.canvas.style.position = 'absolute';
-    this.canvas.style.top = '0';
-    this.canvas.style.left = '0';
-    this.canvas.style.width = '100%';
-    this.canvas.style.height = '100%';
-    this.ctx = this.canvas.getContext('2d');
+    // Create mask div (will be on top of SVG)
+    this.maskDiv = document.createElement('div');
+    this.maskDiv.className = 'hybrid-background-mask';
+    this.maskDiv.style.position = 'absolute';
+    this.maskDiv.style.top = '0';
+    this.maskDiv.style.left = '0';
+    this.maskDiv.style.width = '100%';
+    this.maskDiv.style.height = '100%';
+    this.maskDiv.style.pointerEvents = 'none';
+    this.maskDiv.style.backgroundColor = this.options.color1; // Same as background
+    this.maskDiv.style.transition = 'background 0.1s ease'; // Smooth transition for gradient changes
     
-    // Add elements to container
+    // Create canvas for highlight effect (will be on top of mask)
+    this.highlightCanvas = document.createElement('canvas');
+    this.highlightCanvas.className = 'hybrid-background-highlight-canvas';
+    this.highlightCanvas.style.position = 'absolute';
+    this.highlightCanvas.style.top = '0';
+    this.highlightCanvas.style.left = '0';
+    this.highlightCanvas.style.width = '100%';
+    this.highlightCanvas.style.height = '100%';
+    this.highlightCanvas.style.pointerEvents = 'none';
+    this.highlightCtx = this.highlightCanvas.getContext('2d');
+    
+    // Add elements to container in proper order (bottom to top)
     this.container.appendChild(this.baseGradient);
     this.container.appendChild(this.svgContainer);
-    this.container.appendChild(this.canvas);
+    this.container.appendChild(this.maskDiv);
+    this.container.appendChild(this.highlightCanvas);
     
     // Add container to hero section instead of body
     this.heroSection.prepend(this.container);
@@ -167,10 +182,10 @@ class HybridBackground {
       this.svg.style.top = '0';
       this.svg.style.left = '0';
       
-      // Fade in SVG
+      // Fade in SVG with full opacity (mask will handle visibility)
       setTimeout(() => {
         this.svgContainer.style.transition = 'opacity 0.5s ease';
-        this.svgContainer.style.opacity = this.options.hexOpacity;
+        this.svgContainer.style.opacity = '1';
       }, 100);
     }
   }
@@ -199,18 +214,23 @@ class HybridBackground {
     this.container.style.height = `${heroHeight}px`;
     this.baseGradient.style.height = `${heroHeight}px`;
     this.svgContainer.style.height = `${heroHeight}px`;
+    this.maskDiv.style.height = `${heroHeight}px`;
     
-    // Set canvas dimensions
+    // Set dimensions for highlight canvas
     this.width = heroWidth;
     this.height = heroHeight;
-    this.canvas.style.width = '100%';
-    this.canvas.style.height = `${heroHeight}px`;
+    
+    // Set highlight canvas dimensions
+    this.highlightCanvas.style.width = '100%';
+    this.highlightCanvas.style.height = `${heroHeight}px`;
     
     // Set canvas resolution (considering device pixel ratio for retina displays)
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.canvas.width = this.width * dpr;
-    this.canvas.height = this.height * dpr;
-    this.ctx.scale(dpr, dpr);
+    
+    // Configure highlight canvas
+    this.highlightCanvas.width = this.width * dpr;
+    this.highlightCanvas.height = this.height * dpr;
+    this.highlightCtx.scale(dpr, dpr);
     
     // Force a render update
     this.needsUpdate = true;
@@ -321,28 +341,41 @@ class HybridBackground {
     this.lastMouseY = this.mouse.y;
     this.needsUpdate = false;
     
-    // Clear canvas
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    // Calculate visibility radius (how far from mouse the hexagons are visible)
+    const visibilityRadius = Math.min(this.width, this.height) * this.options.visibilityRadius;
     
-    // Draw mouse-reactive gradient
-    const gradientSize = Math.max(this.width, this.height) * this.options.highlightSize;
-    const radialGradient = this.ctx.createRadialGradient(
+    // Update mask div with radial gradient
+    // This creates a "hole" in the mask where the hexagons are visible
+    this.maskDiv.style.background = `radial-gradient(
+      circle ${visibilityRadius}px at ${this.mouse.x}px ${this.mouse.y}px, 
+      rgba(12, 25, 45, 0) 0%, 
+      rgba(12, 25, 45, 0.5) 70%, 
+      rgba(12, 25, 45, 1) 100%
+    )`;
+    
+    // ---- RENDER HIGHLIGHT CANVAS ----
+    // Clear highlight canvas
+    this.highlightCtx.clearRect(0, 0, this.width, this.height);
+    
+    // Draw mouse-reactive highlight gradient
+    const highlightSize = Math.max(this.width, this.height) * this.options.highlightSize;
+    const highlightGradient = this.highlightCtx.createRadialGradient(
       this.mouse.x, this.mouse.y, 0,
-      this.mouse.x, this.mouse.y, gradientSize
+      this.mouse.x, this.mouse.y, highlightSize
     );
     
     // Create highlight gradient
-    radialGradient.addColorStop(0, `rgba(60, 77, 112, ${this.options.highlightOpacity})`);
-    radialGradient.addColorStop(0.5, `rgba(60, 77, 112, ${this.options.highlightOpacity / 2})`);
-    radialGradient.addColorStop(1, 'rgba(60, 77, 112, 0)');
+    highlightGradient.addColorStop(0, `rgba(60, 77, 112, ${this.options.highlightOpacity})`);
+    highlightGradient.addColorStop(0.5, `rgba(60, 77, 112, ${this.options.highlightOpacity / 2})`);
+    highlightGradient.addColorStop(1, 'rgba(60, 77, 112, 0)');
     
-    // Apply gradient
-    this.ctx.globalCompositeOperation = 'lighter';
-    this.ctx.fillStyle = radialGradient;
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    // Apply highlight gradient
+    this.highlightCtx.globalCompositeOperation = 'lighter';
+    this.highlightCtx.fillStyle = highlightGradient;
+    this.highlightCtx.fillRect(0, 0, this.width, this.height);
     
     // Reset composite operation
-    this.ctx.globalCompositeOperation = 'source-over';
+    this.highlightCtx.globalCompositeOperation = 'source-over';
     
     // Continue animation loop
     this.animationFrame = requestAnimationFrame(this.render);
@@ -366,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Hexagon options
     hexColor: '#2A4A6A',       // Color of hexagon outlines
-    hexOpacity: 0.09,          // Opacity of hexagons
+    visibilityRadius: isLowPerformance ? 0.15 : 0.2, // Smaller radius on mobile
   });
   
   console.log('Hybrid background initialized successfully');
