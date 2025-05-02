@@ -7,7 +7,7 @@
   right: 0;
   width: var(--nav-width);
   margin: 0 auto;
-  background-color: rgba(12, 25, 45, 0.7); /* #0C192D with 70% opacity - exact match with main background */
+  background-color: rgba(12, 25, 45, 0.5); /* #0C192D with 50% opacity (reduced from 70%) */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   /* Removed outline border */
   border-radius: 8px; /* Slightly rounded edges */
@@ -145,7 +145,7 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: rgba(12, 25, 45, 0.7); /* Match the updated nav-container background */
+    background-color: rgba(12, 25, 45, 0.5); /* Match the updated nav-container background */
     backdrop-filter: blur(12px); /* Match the nav-container blur */
     -webkit-backdrop-filter: blur(12px); /* Safari support */
     /* Removed border to match main nav */
