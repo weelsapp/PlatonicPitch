@@ -89,7 +89,7 @@
   border-radius: 4px; /* Slightly rounded edges to match nav container */
   border: none; /* Remove border completely */
   font-weight: 300; /* Thinner font weight to match nav items */
-  transition: background-position 0.75s ease-in-out;
+  transition: background-position 0.3s ease-out;
   display: flex;
   align-items: center;
   gap: 0.5rem;
