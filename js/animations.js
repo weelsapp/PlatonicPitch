@@ -176,20 +176,27 @@ function slideUp(element, duration = 500, callback) {
  * Initialize animations for elements that should animate on page load
  */
 function initLoadAnimations() {
-  // Add animation classes to elements in the hero section
+  // First, hide all elements that should be animated on load
   const heroElements = document.querySelectorAll('.nav-container .logo, .nav-container .nav-item, .nav-container li a.contact-button, .hero-section .hero-title, .hero-section .hero-subtitle, .hero-section .btn, .hero-section .hero-logo');
+  
+  // Set initial state - hide elements immediately
+  heroElements.forEach(element => {
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(20px)';
+  });
   
   // Add the animation classes
   heroElements.forEach(element => {
     element.classList.add('animate-on-load');
   });
   
-  // Trigger animations after a short delay to ensure all elements are ready
+  // Trigger animations after the page has loaded
+  // Use a longer delay to ensure everything is ready
   setTimeout(() => {
     heroElements.forEach(element => {
       element.classList.add('animated');
     });
-  }, 100);
+  }, 300);
 }
 
 /**
