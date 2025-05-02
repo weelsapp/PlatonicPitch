@@ -64,7 +64,7 @@ class CanvasBackground {
     this.canvas.style.left = '0';
     this.canvas.style.width = '100%';
     this.canvas.style.height = '100%';
-    this.canvas.style.zIndex = '1'; // Place above background but below content
+    this.canvas.style.zIndex = '-1'; // Place behind content
     this.canvas.style.pointerEvents = 'none'; // Allow interactions with elements below
     
     // Add canvas to DOM
@@ -258,12 +258,14 @@ class CanvasBackground {
    */
   noise(x, y) {
     // Multi-frequency noise for more detailed texture
-    const noise1 = (Math.sin(x * 0.01) + Math.sin(y * 0.01)) * 0.5;
-    const noise2 = (Math.sin(x * 0.02 + 0.3) + Math.sin(y * 0.02 + 0.1)) * 0.25;
-    const noise3 = (Math.sin(x * 0.04 + 0.7) + Math.sin(y * 0.04 + 0.5)) * 0.125;
+    // Higher frequencies for finer detail
+    const noise1 = (Math.sin(x * 0.03) + Math.sin(y * 0.03)) * 0.4;
+    const noise2 = (Math.sin(x * 0.06 + 0.3) + Math.sin(y * 0.06 + 0.1)) * 0.3;
+    const noise3 = (Math.sin(x * 0.12 + 0.7) + Math.sin(y * 0.12 + 0.5)) * 0.2;
+    const noise4 = (Math.sin(x * 0.24 + 1.1) + Math.sin(y * 0.24 + 0.9)) * 0.1;
     
     // Combine different frequencies for more natural look
-    return (noise1 + noise2 + noise3) * 0.5 + 0.5;
+    return (noise1 + noise2 + noise3 + noise4) * 0.5 + 0.5;
   }
   
   /**
@@ -353,8 +355,8 @@ class CanvasBackground {
       // Set composite operation to 'lighten' for more visible effect
       this.ctx.globalCompositeOperation = 'lighten';
       
-      // Use smaller noise scale for more detailed texture
-      const noiseScale = 20; // Even more detailed noise (was 40)
+      // Use much smaller noise scale for finer detailed texture
+      const noiseScale = 8; // Much finer noise (was 20)
       
       // Only draw noise in the hero section
       for (let x = 0; x < this.width; x += noiseScale) {
@@ -402,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightOpacity: 0.15,    // Very subtle highlight
     highlightSize: 0.5,        // Medium size highlight
     easing: 0.3,               // 2x faster mouse following as requested
-    noiseIntensity: 0.25,      // Significantly increased noise intensity for better visibility
+    noiseIntensity: 0.15,      // Moderate noise intensity for subtle effect
     
     // Hexagon grid options
     hexEnabled: true,          // Enable hexagon grid
