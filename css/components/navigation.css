@@ -7,17 +7,12 @@
   right: 0;
   width: var(--nav-width);
   margin: 0 auto;
-  background-color: var(--color-surface-elevated);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.05); /* Very light background for frosted look */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Thin white outline */
   border-radius: var(--nav-border-radius);
   z-index: 9999;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.nav-container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px); /* Enhanced blur for frosted glass effect */
 }
 
 .navbar {
@@ -49,18 +44,18 @@
   position: relative;
   display: flex;
   align-items: center;
-  color: var(--color-secondary);
-  font-weight: 500;
+  color: white;
+  font-weight: 300; /* Thinner font weight */
 }
 
 .nav-item:hover {
-  color: var(--color-primary);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .dropdown-arrow {
   margin-left: 0.25rem;
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.4rem; /* Half the original size */
+  height: 0.4rem;
   display: inline-block;
   position: relative;
 }
@@ -70,48 +65,36 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -25%) rotate(45deg);
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid var(--color-secondary);
-  border-bottom: 2px solid var(--color-secondary);
+  transform: translate(-50%, -50%) rotate(45deg); /* Centered vertically */
+  width: 0.25rem; /* Half the original size */
+  height: 0.25rem;
+  border-right: 1px solid white;
+  border-bottom: 1px solid white;
 }
 
 .contact-button {
-  background-color: var(--color-accent);
+  background: linear-gradient(to right, #6496AF, #5458A6);
   color: white;
   padding: 0.5rem 1.25rem;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  border-radius: 0; /* Hard edges */
+  border: none; /* Remove border completely */
+  font-weight: 300; /* Thinner font weight to match nav items */
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-clip: padding-box; /* Prevent background from bleeding through */
+  position: relative; /* For pseudo-element */
 }
 
 .contact-button:hover {
-  background-color: #5a9ae6;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
 }
 
-.contact-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transition: left 0.7s ease;
-}
-
-.contact-button:hover::before {
-  left: 100%;
+.contact-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
 }
 
 /* Mobile Navigation */
@@ -130,8 +113,8 @@
   display: block;
   height: 3px;
   width: 100%;
-  background-color: var(--color-primary);
-  border-radius: 3px;
+  background-color: white;
+  border-radius: 0; /* Remove rounded corners */
   transition: all 0.3s ease;
 }
 
@@ -153,7 +136,10 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: var(--color-surface-elevated);
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: none;
     padding: 1.5rem 0;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     gap: 1.5rem;

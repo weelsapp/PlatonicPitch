@@ -21,7 +21,7 @@
   --color-accent: #4d8edb;
   
   /* Typography */
-  --font-primary: Arial, sans-serif;
+  --font-primary: 'Manrope', sans-serif;
   
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -35,9 +35,9 @@
   --container-padding: 0 5%;
   
   /* Navigation */
-  --nav-width: 70%;
+  --nav-width: 75%;
   --nav-top-margin: 1rem;
-  --nav-border-radius: 8px;
+  --nav-border-radius: 0px; /* Squared edges */
 }
 
 body {
