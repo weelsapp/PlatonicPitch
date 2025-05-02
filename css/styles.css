@@ -37,7 +37,7 @@
   
   /* Navigation */
   --nav-width: 75%;
-  --nav-top-margin: 1rem;
+  --nav-top-margin: 2rem; /* Doubled from 1rem to 2rem */
   --nav-border-radius: 0px; /* Squared edges */
 }
 
