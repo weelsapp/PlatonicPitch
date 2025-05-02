@@ -131,9 +131,12 @@ class HybridBackground {
   loadSvg() {
     // Embed SVG directly to avoid CORS issues
     const svgContent = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" 
+           viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <pattern id="hexagon_pattern" x="0" y="0" width="44" height="76" patternTransform="translate(-2962.962 -3124.222) scale(.583)" patternUnits="userSpaceOnUse" viewBox="0 0 44 76">
+          <pattern id="hexagon_pattern" x="0" y="0" width="44" height="76" 
+                  patternTransform="translate(-2962.962 -3124.222) scale(.583)" 
+                  patternUnits="userSpaceOnUse" viewBox="0 0 44 76">
             <rect width="44" height="76" style="fill:none;"/>
             <polygon points="22 63.298 22 88.702 44 101.403 66 88.702 66 63.298 44 50.597 22 63.298" style="fill:none; stroke:#2A4A6A; stroke-miterlimit:10; stroke-width:1.5;"/>
             <polygon points="-22 63.298 -22 88.702 0 101.403 22 88.702 22 63.298 0 50.597 -22 63.298" style="fill:none; stroke:#2A4A6A; stroke-miterlimit:10; stroke-width:1.5;"/>
@@ -144,7 +147,7 @@ class HybridBackground {
             <polygon points="-22 -12.702 -22 12.702 0 25.403 22 12.702 22 -12.702 0 -25.403 -22 -12.702" style="fill:none; stroke:#2A4A6A; stroke-miterlimit:10; stroke-width:1.5;"/>
           </pattern>
         </defs>
-        <rect y="0" width="1920" height="1080" style="fill:url(#hexagon_pattern);"/>
+        <rect y="0" width="100%" height="100%" style="fill:url(#hexagon_pattern);"/>
       </svg>
     `;
     
@@ -154,11 +157,15 @@ class HybridBackground {
     // Get the SVG element
     this.svg = this.svgContainer.querySelector('svg');
     
-    // Set SVG to fill container
+    // Set SVG to fill container with priority on width
     if (this.svg) {
       this.svg.style.width = '100%';
-      this.svg.style.height = '100%';
+      this.svg.style.height = 'auto';
+      this.svg.style.minHeight = '100%';
       this.svg.style.display = 'block';
+      this.svg.style.position = 'absolute';
+      this.svg.style.top = '0';
+      this.svg.style.left = '0';
       
       // Fade in SVG
       setTimeout(() => {
