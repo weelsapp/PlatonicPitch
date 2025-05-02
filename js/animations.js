@@ -1,13 +1,14 @@
 /**
  * Animations for the website
  * This file contains animation utilities and implementations
- * Currently just a placeholder for future implementation
  */
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize animations
   initMouseReactiveBackground();
+  initLoadAnimations();
+  initScrollAnimations();
   console.log('Animation system ready');
 });
 
@@ -169,4 +170,59 @@ function slideDown(element, duration = 500, callback) {
 function slideUp(element, duration = 500, callback) {
   // This is a placeholder for future implementation
   console.log('Slide up animation will be implemented in the future');
+}
+
+/**
+ * Initialize animations for elements that should animate on page load
+ */
+function initLoadAnimations() {
+  // Add animation classes to elements in the hero section
+  const heroElements = document.querySelectorAll('.nav-container .logo, .nav-container .nav-item, .nav-container li a.contact-button, .hero-section .hero-title, .hero-section .hero-subtitle, .hero-section .btn, .hero-section .hero-logo');
+  
+  // Add the animation classes
+  heroElements.forEach(element => {
+    element.classList.add('animate-on-load');
+  });
+  
+  // Trigger animations after a short delay to ensure all elements are ready
+  setTimeout(() => {
+    heroElements.forEach(element => {
+      element.classList.add('animated');
+    });
+  }, 100);
+}
+
+/**
+ * Initialize animations for elements that should animate on scroll
+ */
+function initScrollAnimations() {
+  // Select all elements that should animate on scroll
+  const scrollElements = document.querySelectorAll('.features-section .features-title, .features-section .features-description, .features-section .features-img, .features-section .feature-card');
+  
+  // Add the animation class
+  scrollElements.forEach(element => {
+    element.classList.add('animate-on-scroll');
+  });
+  
+  // Create an Intersection Observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      // If the element is in the viewport
+      if (entry.isIntersecting) {
+        // Add the animated class to trigger the animation
+        entry.target.classList.add('animated');
+        // Unobserve the element after it's been animated
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    // Options for the observer
+    threshold: 0.1, // Trigger when at least 10% of the element is visible
+    rootMargin: '0px 0px -50px 0px' // Trigger slightly before the element enters the viewport
+  });
+  
+  // Observe each element
+  scrollElements.forEach(element => {
+    observer.observe(element);
+  });
 }
