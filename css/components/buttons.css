@@ -29,7 +29,9 @@
 
 /* Primary Button */
 .btn-primary {
-  position: relative;
+  background: linear-gradient(to right, #6496AF, #5458A6, #6496AF);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
   color: white;
   border-radius: 4px; /* Slightly rounded edges */
   border: none; /* Remove border completely */
@@ -38,24 +40,12 @@
   align-items: center;
   gap: 0.5rem;
   background-clip: padding-box; /* Prevent background from bleeding through */
-  overflow: hidden;
-  z-index: 1;
+  position: relative; /* For pseudo-element */
+  transition: background-position 0.75s ease-in-out;
 }
 
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: conic-gradient(from 0deg, #6496AF, #5458A6, #6496AF);
-  z-index: -1;
-  transition: transform 1.8s ease-in-out;
-}
-
-.btn-primary:hover::before {
-  transform: rotate(360deg);
+.btn-primary:hover {
+  background-position: 100% 50%;
 }
 
 /* Secondary Button */
