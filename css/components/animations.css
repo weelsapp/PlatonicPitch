@@ -20,41 +20,17 @@
   visibility: visible;
 }
 
-/* Staggered animation delays for hero section */
-.nav-container .logo {
+/* Animation delays for the three main blocks */
+.nav-container {
   transition-delay: 0.1s;
 }
 
-.nav-container .nav-item:nth-child(1) {
-  transition-delay: 0.2s;
-}
-
-.nav-container .nav-item:nth-child(2) {
+.hero-content {
   transition-delay: 0.3s;
 }
 
-.nav-container .nav-item:nth-child(3) {
-  transition-delay: 0.4s;
-}
-
-.nav-container li a.contact-button {
+.hero-logo {
   transition-delay: 0.5s;
-}
-
-.hero-section .hero-title {
-  transition-delay: 0.6s;
-}
-
-.hero-section .hero-subtitle {
-  transition-delay: 0.8s;
-}
-
-.hero-section .btn {
-  transition-delay: 1s;
-}
-
-.hero-section .hero-logo {
-  transition-delay: 0.7s;
 }
 
 /* Staggered animation delays for features section */
