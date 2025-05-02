@@ -10,7 +10,7 @@ class LogoTilt {
       element: '.hero-logo',       // Element to apply the tilt effect to
       maxTilt: 15,                 // Maximum tilt angle in degrees
       perspective: 1000,           // CSS perspective value
-      easing: 0.05,                // Easing factor for smooth movement (0-1)
+      easing: 0.15,                // Easing factor for smooth movement (0-1) - 3x faster
       scale: 1.05,                 // Subtle scale effect on hover
       resetOnLeave: true,          // Reset tilt when mouse leaves window
       gyroscope: false             // Enable gyroscope on mobile (not implemented yet)
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.logoTilt = new LogoTilt({
     maxTilt: 10,       // Subtle tilt (10 degrees max)
     perspective: 1200, // Deeper perspective
-    easing: 0.08,      // Smooth movement
+    easing: 0.24,      // 3x faster tracking (original: 0.08)
     scale: 1.03        // Very subtle scale effect
   });
   
