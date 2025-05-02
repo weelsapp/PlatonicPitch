@@ -7,9 +7,9 @@
   right: 0;
   width: var(--nav-width);
   margin: 0 auto;
-  background-color: rgba(15, 34, 65, 0.3); /* Semi-transparent background for frosted look */
+  background-color: rgba(12, 25, 45, 0.7); /* #0C192D with 70% opacity - exact match with main background */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.15); /* Thin white outline */
+  /* Removed outline border */
   border-radius: 8px; /* Slightly rounded edges */
   z-index: 9999;
   backdrop-filter: blur(15px); /* Enhanced blur for frosted glass effect */
@@ -19,7 +19,7 @@
 /* Add a pseudo-element for browsers that don't support backdrop-filter */
 @supports not (backdrop-filter: blur(15px)) {
   .nav-container {
-    background-color: rgba(15, 34, 65, 0.8); /* Fallback for browsers without backdrop-filter */
+    background-color: rgba(12, 25, 45, 0.9); /* Fallback for browsers without backdrop-filter */
   }
 }
 
@@ -145,10 +145,10 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: rgba(15, 34, 65, 0.3); /* Match the nav-container background */
+    background-color: rgba(12, 25, 45, 0.7); /* Match the updated nav-container background */
     backdrop-filter: blur(15px); /* Match the nav-container blur */
     -webkit-backdrop-filter: blur(15px); /* Safari support */
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Match the nav-container border */
+    /* Removed border to match main nav */
     border-top: none;
     padding: 1.5rem 0;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
@@ -160,7 +160,7 @@
   /* Fallback for browsers that don't support backdrop-filter */
   @supports not (backdrop-filter: blur(15px)) {
     .nav-links.active {
-      background-color: rgba(15, 34, 65, 0.8); /* Fallback for browsers without backdrop-filter */
+      background-color: rgba(12, 25, 45, 0.9); /* Match the updated fallback */
     }
   }
   
