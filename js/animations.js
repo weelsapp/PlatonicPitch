@@ -176,14 +176,8 @@ function slideUp(element, duration = 500, callback) {
  * Initialize animations for elements that should animate on page load
  */
 function initLoadAnimations() {
-  // First, hide all elements that should be animated on load
-  const heroElements = document.querySelectorAll('.nav-container .logo, .nav-container .nav-item, .nav-container li a.contact-button, .hero-section .hero-title, .hero-section .hero-subtitle, .hero-section .btn, .hero-section .hero-logo');
-  
-  // Set initial state - hide elements immediately
-  heroElements.forEach(element => {
-    element.style.opacity = '0';
-    element.style.transform = 'translateY(20px)';
-  });
+  // Get all elements with the initially-hidden class that should animate on load
+  const heroElements = document.querySelectorAll('.initially-hidden');
   
   // Add the animation classes
   heroElements.forEach(element => {

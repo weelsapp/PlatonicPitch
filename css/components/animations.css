@@ -1,6 +1,11 @@
 /* Animation Component Styles */
 
 /* Base animation classes */
+.initially-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .animate-on-load,
 .animate-on-scroll {
   opacity: 0;
@@ -12,6 +17,7 @@
 .animate-on-scroll.animated {
   opacity: 1;
   transform: translateY(0);
+  visibility: visible;
 }
 
 /* Staggered animation delays for hero section */
