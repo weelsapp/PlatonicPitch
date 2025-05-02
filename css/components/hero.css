@@ -1,11 +1,13 @@
 /* Hero Component Styles */
 
 .hero-section {
-  display: flex;
   min-height: 90vh;
-  padding: 10rem 2.5% 5rem; /* Reduced side padding by half */
-  max-width: 1400px;
+  padding: 10rem 0 5rem; /* Remove horizontal padding */
   margin: 0 auto;
+}
+
+.hero-section .container {
+  display: flex;
   align-items: center;
 }
 
@@ -39,7 +41,7 @@
 
 .hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 3.5rem;
+  font-size: 3rem; /* Match the features-title font size */
   line-height: 1.2;
   margin-bottom: 1.5rem;
   color: var(--color-primary);
@@ -77,8 +79,11 @@
 /* Media Queries */
 @media (max-width: 992px) {
   .hero-section {
-    flex-direction: column;
     padding-top: 9rem;
+  }
+  
+  .hero-section .container {
+    flex-direction: column;
   }
   
   .hero-content {
