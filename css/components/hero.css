@@ -19,21 +19,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-surface);
   min-height: 400px;
-  border-radius: 12px;
   position: relative;
-  border: 1px solid var(--color-light-gray);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 
-.hero-image-container::after {
-  content: 'Image Placeholder';
-  position: absolute;
-  color: var(--color-secondary);
-  font-size: 1.2rem;
-  font-style: italic;
+.hero-logo {
+  width: 30vw; /* 30% of viewport width */
+  max-width: 500px;
+  height: auto;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
 }
 
 .hero-title {
@@ -95,5 +90,10 @@
   .hero-section {
     padding-top: 8rem;
     padding-bottom: 3rem;
+  }
+  
+  .hero-logo {
+    width: 70%; /* Larger percentage on mobile for better visibility */
+    max-width: 300px;
   }
 }

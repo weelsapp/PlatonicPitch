@@ -12,12 +12,12 @@
   /* Colors - Dark Theme */
   --color-primary: #e0e0e0;
   --color-secondary: #aaaaaa;
-  --color-background: #121212;
-  --color-surface: #1e1e1e;
-  --color-surface-elevated: #252525;
-  --color-light-gray: #333333;
-  --color-medium-gray: #444444;
-  --color-dark-gray: #666666;
+  --color-background: #0C192D;
+  --color-surface: #0F2241;
+  --color-surface-elevated: #132954;
+  --color-light-gray: #1F3A6B;
+  --color-medium-gray: #2A4980;
+  --color-dark-gray: #3D5A8C;
   --color-accent: #4d8edb;
   
   /* Typography */
@@ -44,7 +44,7 @@ body {
   font-family: var(--font-primary);
   color: var(--color-primary);
   background-color: var(--color-background);
-  background-image: linear-gradient(to bottom right, #121212, #1a1a1a);
+  background-image: linear-gradient(to bottom right, #0C192D, #0A1525);
   min-height: 100vh;
 }
 
