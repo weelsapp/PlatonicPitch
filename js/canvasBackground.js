@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gradient background options
     highlightOpacity: 0.15,    // Very subtle highlight
     highlightSize: 0.5,        // Medium size highlight
-    easing: 0.08,              // Smooth movement
+    easing: 0.15,              // Faster mouse following as requested
     noiseIntensity: 0.01,      // Very subtle noise
     
     // Hexagon grid options
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hexSize: 20,               // Smaller hexagons for more detail
     hexColor: '#2A4A6A',       // Brighter color for better visibility
     hexLineWidth: 1.25,        // Thicker lines for visibility
-    hexOpacity: 0.1,           // Very low opacity as requested
+    hexOpacity: 0.5,           // Higher visibility as requested
     hexFadeRadius: 500,        // Doubled fade radius (2x larger visible area)
     hexGlow: 2                 // Moderate glow effect
   });
