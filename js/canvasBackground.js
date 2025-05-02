@@ -59,7 +59,7 @@ class CanvasBackground {
    */
   init() {
     // Set up canvas
-    this.canvas.style.position = 'fixed';
+    this.canvas.style.position = 'absolute';
     this.canvas.style.top = '0';
     this.canvas.style.left = '0';
     this.canvas.style.width = '100%';
@@ -77,6 +77,7 @@ class CanvasBackground {
     window.addEventListener('resize', this.handleResize);
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseleave', this.handleMouseLeave);
+    window.addEventListener('scroll', this.handleResize); // Update canvas on scroll
     
     // Start animation
     this.start();
@@ -86,9 +87,21 @@ class CanvasBackground {
    * Handle window resize
    */
   handleResize() {
-    // Set canvas dimensions to match window size
+    // Get document height (to cover all content, not just viewport)
+    const docHeight = Math.max(
+      document.body.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.clientHeight,
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight
+    );
+    
+    // Set canvas dimensions to match document size
     this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.height = docHeight;
+    
+    // Update canvas size
+    this.canvas.style.height = `${docHeight}px`;
     
     // Set canvas resolution (considering device pixel ratio for retina displays)
     const dpr = window.devicePixelRatio || 1;
@@ -191,17 +204,18 @@ class CanvasBackground {
    * @param {MouseEvent} e - Mouse event
    */
   handleMouseMove(e) {
+    // Get mouse position relative to the document (including scroll)
     this.mouse.targetX = e.clientX;
-    this.mouse.targetY = e.clientY;
+    this.mouse.targetY = e.clientY + window.scrollY;
   }
   
   /**
    * Handle mouse leaving the window
    */
   handleMouseLeave() {
-    // Reset to center when mouse leaves
+    // Reset to center of current viewport when mouse leaves
     this.mouse.targetX = this.width / 2;
-    this.mouse.targetY = this.height / 2;
+    this.mouse.targetY = window.scrollY + window.innerHeight / 2;
   }
   
   /**
@@ -232,6 +246,7 @@ class CanvasBackground {
     window.removeEventListener('resize', this.handleResize);
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseleave', this.handleMouseLeave);
+    window.removeEventListener('scroll', this.handleResize);
     this.canvas.remove();
   }
   
