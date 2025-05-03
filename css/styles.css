@@ -8,6 +8,7 @@
 @import url('components/hero.css');
 @import url('components/features.css');
 @import url('components/animations.css');
+@import url('components/perlin-background.css');
 
 /* Global Styles */
 :root {

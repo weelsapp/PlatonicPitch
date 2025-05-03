@@ -83,10 +83,22 @@ class CanvasBackground {
     this.start();
   }
   
+  // Track last resize time for throttling
+  lastResizeTime = 0;
+  lastWidth = 0;
+  lastHeight = 0;
+  
   /**
    * Handle window resize
    */
   handleResize() {
+    // Throttle resize events to once per 500ms
+    const now = Date.now();
+    if (now - this.lastResizeTime < 500) {
+      return;
+    }
+    this.lastResizeTime = now;
+    
     // Get document height (to cover all content, not just viewport)
     const docHeight = Math.max(
       document.body.scrollHeight,
@@ -104,15 +116,24 @@ class CanvasBackground {
     this.canvas.style.height = `${docHeight}px`;
     
     // Set canvas resolution (considering device pixel ratio for retina displays)
-    const dpr = window.devicePixelRatio || 1;
+    // Limit DPR to 2 for better performance on high-DPI displays
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.canvas.width = this.width * dpr;
     this.canvas.height = this.height * dpr;
     this.ctx.scale(dpr, dpr);
     
-    // Generate hexagon grid when size changes
-    if (this.options.hexEnabled) {
+    // Only regenerate hexagon grid when size changes significantly
+    const widthChanged = Math.abs(this.width - this.lastWidth) > 100;
+    const heightChanged = Math.abs(this.height - this.lastHeight) > 100;
+    
+    if ((widthChanged || heightChanged) && this.options.hexEnabled) {
+      this.lastWidth = this.width;
+      this.lastHeight = this.height;
       this.generateHexGrid();
     }
+    
+    // Force a render update
+    this.needsUpdate = true;
   }
   
   /**
@@ -130,16 +151,19 @@ class CanvasBackground {
     const hexWidth = size * Math.sqrt(3);
     const hexHeight = size * 2;
     
-    // Calculate grid dimensions for 90-degree rotated grid
-    const rows = Math.ceil(height / (size * 1.5)) + 2;  // Add extra rows for partial visibility
-    const cols = Math.ceil(width / hexWidth) + 2;       // Add extra columns for partial visibility
+    // Calculate grid dimensions with increased spacing (reduced density)
+    // Increase spacing by 50% to reduce the number of hexagons
+    const spacing = 1.5; // Spacing multiplier
+    const rows = Math.ceil(height / (size * 1.5 * spacing)) + 1;
+    const cols = Math.ceil(width / (hexWidth * spacing)) + 1;
     
     // Generate grid with offset for every other column (90-degree rotated grid)
+    // Use a step value to reduce density
     for (let col = -1; col < cols; col++) {
       for (let row = -1; row < rows; row++) {
-        // Calculate center position of hexagon
-        const x = col * hexWidth + (row % 2 === 0 ? 0 : hexWidth / 2);
-        const y = row * size * 1.5;
+        // Calculate center position of hexagon with increased spacing
+        const x = col * hexWidth * spacing + (row % 2 === 0 ? 0 : hexWidth / 2);
+        const y = row * size * 1.5 * spacing;
         
         // Add hexagon to grid
         this.hexGrid.push({ x, y, size });
@@ -159,23 +183,15 @@ class CanvasBackground {
   drawHexagon(x, y, size, opacity = 1) {
     const ctx = this.ctx;
     
-    // Save context
-    ctx.save();
-    
-    // Set line style
+    // Set line style directly without saving context (more efficient)
     ctx.strokeStyle = this.options.hexColor;
     ctx.lineWidth = this.options.hexLineWidth;
     ctx.globalAlpha = opacity;
     
-    // Add glow effect if enabled
-    if (this.options.hexGlow > 0) {
-      ctx.shadowColor = this.options.hexColor;
-      ctx.shadowBlur = this.options.hexGlow;
-    }
-    
     // Begin path
     ctx.beginPath();
     
+    // Use pre-calculated points for better performance
     // Draw hexagon with 90 degree rotation
     for (let i = 0; i < 6; i++) {
       const angle = (i * Math.PI) / 3 + Math.PI / 2; // Add 90 degree rotation
@@ -195,8 +211,8 @@ class CanvasBackground {
     // Stroke hexagon
     ctx.stroke();
     
-    // Restore context
-    ctx.restore();
+    // Reset alpha to avoid affecting other drawing operations
+    ctx.globalAlpha = 1;
   }
   
   /**
@@ -268,6 +284,12 @@ class CanvasBackground {
     return (noise1 + noise2 + noise3 + noise4) * 0.5 + 0.5;
   }
   
+  // Performance optimization: Track if mouse has moved significantly
+  lastMouseX = 0;
+  lastMouseY = 0;
+  needsUpdate = true;
+  frameCount = 0;
+  
   /**
    * Render the background
    */
@@ -277,6 +299,28 @@ class CanvasBackground {
     // Apply easing to mouse movement for smooth transitions
     this.mouse.x += (this.mouse.targetX - this.mouse.x) * this.options.easing;
     this.mouse.y += (this.mouse.targetY - this.mouse.y) * this.options.easing;
+    
+    // Performance optimization: Only redraw when necessary
+    const mouseMoved = Math.abs(this.mouse.x - this.lastMouseX) > 1 || 
+                       Math.abs(this.mouse.y - this.lastMouseY) > 1;
+    
+    // Force update every 30 frames even if mouse hasn't moved (for any animations)
+    this.frameCount++;
+    if (this.frameCount >= 30) {
+      this.needsUpdate = true;
+      this.frameCount = 0;
+    }
+    
+    // Skip rendering if no update needed
+    if (!mouseMoved && !this.needsUpdate) {
+      this.animationFrame = requestAnimationFrame(this.render);
+      return;
+    }
+    
+    // Update last mouse position
+    this.lastMouseX = this.mouse.x;
+    this.lastMouseY = this.mouse.y;
+    this.needsUpdate = false;
     
     // Clear canvas
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -318,19 +362,34 @@ class CanvasBackground {
       // Using 1.5x the fade radius to ensure smooth edges
       const visibilityRadius = fadeRadius * 1.5;
       
+      // Performance optimization: Calculate squared distances to avoid square root operations
+      const visibilityRadiusSq = visibilityRadius * visibilityRadius;
+      const fadeRadiusSq = fadeRadius * fadeRadius;
+      
+      // Get viewport bounds for culling
+      const viewportTop = window.scrollY;
+      const viewportBottom = viewportTop + window.innerHeight;
+      const viewportBuffer = 200; // Buffer to ensure smooth transitions
+      
       for (const hex of this.hexGrid) {
-        // Calculate distance from mouse
+        // Skip hexagons outside the viewport (with buffer)
+        if (hex.y < viewportTop - viewportBuffer || hex.y > viewportBottom + viewportBuffer) {
+          continue;
+        }
+        
+        // Calculate squared distance from mouse (more efficient than using Math.sqrt)
         const dx = hex.x - this.mouse.x;
         const dy = hex.y - this.mouse.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distanceSq = dx * dx + dy * dy;
         
         // Skip hexagons too far from mouse
-        if (distance > visibilityRadius) continue;
+        if (distanceSq > visibilityRadiusSq) continue;
         
         // Calculate opacity based on distance
-        // Using exponential falloff for stronger fading effect
         let opacity = 0;
-        if (distance < fadeRadius) {
+        if (distanceSq < fadeRadiusSq) {
+          // Calculate actual distance only when needed
+          const distance = Math.sqrt(distanceSq);
           // Exponential fade (cube) for stronger falloff
           opacity = maxOpacity * Math.pow(1 - distance / fadeRadius, 3);
           
@@ -339,8 +398,6 @@ class CanvasBackground {
         }
       }
     }
-    
-    // Noise texture effect has been removed as requested
     
     // Reset composite operation
     this.ctx.globalCompositeOperation = 'source-over';
@@ -354,6 +411,10 @@ class CanvasBackground {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Canvas background initializing...');
   
+  // Detect if running on a mobile device or low-performance browser
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isLowPerformance = isMobile || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  
   // Create background with custom options
   window.canvasBackground = new CanvasBackground({
     // Gradient background options
@@ -364,12 +425,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Hexagon grid options
     hexEnabled: true,          // Enable hexagon grid
-    hexSize: 20,               // Smaller hexagons for more detail
+    hexSize: isLowPerformance ? 30 : 20, // Larger hexagons on mobile/low-performance devices
     hexColor: '#2A4A6A',       // Brighter color for better visibility
-    hexLineWidth: 1.25,        // Thicker lines for visibility
+    hexLineWidth: 1,           // Thinner lines for better performance
     hexOpacity: 0.09,          // Increased from 0.07 to 0.09
-    hexFadeRadius: 500,        // Doubled fade radius (2x larger visible area)
-    hexGlow: 2                 // Moderate glow effect
+    hexFadeRadius: isLowPerformance ? 300 : 500, // Smaller radius on mobile/low-performance devices
+    hexGlow: 0                 // Disable glow effect for better performance
   });
   
   console.log('Canvas background initialized successfully');

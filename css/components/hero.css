@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: center;
   position: relative; /* Ensure position is relative for absolute positioning of background */
-  background-color: var(--color-background); /* Set background color as fallback */
+  /* Removed background-color to allow WebGL shader to be visible */
   overflow: hidden; /* Ensure background stays within bounds */
 }
 
