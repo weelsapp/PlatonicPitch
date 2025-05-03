@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /**
  * Initialize mouse-reactive background
- * This function is now handled by hybridBackground.js
+ * This function is now handled by shaderBackground.js
  */
 function initMouseReactiveBackground() {
-  // This function is now a no-op as it's been replaced by hybridBackground.js
+  // This function is now a no-op as it's been replaced by shaderBackground.js
   // No action needed here
 }
 
@@ -141,13 +141,10 @@ function initLoadAnimations() {
     element.classList.add('animate-on-load');
   });
   
-  // Trigger animations after the page has loaded
-  // Use a longer delay to ensure everything is ready
-  setTimeout(() => {
-    heroElements.forEach(element => {
-      element.classList.add('animated');
-    });
-  }, 300);
+  // Trigger animations immediately after the page has loaded
+  heroElements.forEach(element => {
+    element.classList.add('animated');
+  });
 }
 
 /**
