@@ -134,11 +134,11 @@ class ShaderBackground {
     // Request next frame
     requestAnimationFrame(this.animate.bind(this));
     
-    // Frame rate limiting - only render every other frame (30fps instead of 60fps)
+    // Frame rate limiting - only render every sixth frame (10fps instead of 60fps)
     if (!this.frameCount) this.frameCount = 0;
     this.frameCount++;
     
-    if (this.frameCount % 2 === 0) {
+    if (this.frameCount % 6 === 0) {
       // Update uniforms
       this.material.uniforms.iTime.value = this.clock.getElapsedTime();
       
