@@ -1,21 +1,24 @@
 /* Hero Component Styles */
 
 .hero-section {
-  height: 100vh; /* Exact viewport height */
-  padding-top: var(--nav-safe-area); /* Use safe area as top padding */
-  padding-bottom: 0; /* Remove bottom padding */
+  height: 100vh; /* Full viewport height */
+  padding-top: var(--nav-safe-area); /* Space for the navigation */
+  padding-bottom: 0;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   position: relative; /* Ensure position is relative for absolute positioning of background */
   /* Removed background-color to allow WebGL shader to be visible */
   overflow: hidden; /* Ensure background stays within bounds */
+  box-sizing: border-box; /* Ensure padding is included in height */
 }
 
 .hero-section .container {
   display: flex;
   align-items: center;
+  height: calc(100% - var(--nav-safe-area)); /* Available height minus nav area */
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .hero-content {
@@ -40,7 +43,7 @@
   width: 27vw; /* Reduced from 30vw to 27vw (10% smaller) */
   max-width: 450px; /* Reduced from 500px to 450px (10% smaller) */
   height: auto;
-  margin-top: 2rem; /* Added top margin to position logo lower than text content */
+  margin-top: 0; /* Removed top margin for better vertical centering */
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
   transform-style: preserve-3d; /* Enable 3D transformations */
   will-change: transform; /* Hint for browser optimization */
@@ -121,7 +124,11 @@
   
   .hero-section {
     padding-top: var(--nav-safe-area); /* Use the same safe area variable */
-    padding-bottom: 0; /* Remove bottom padding on mobile too */
+    padding-bottom: 0; /* No bottom padding needed */
+  }
+  
+  .hero-section .container {
+    height: calc(100% - var(--nav-safe-area)); /* Same calculation for mobile */
   }
   
   .hero-logo {
