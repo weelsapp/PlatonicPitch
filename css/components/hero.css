@@ -1,9 +1,9 @@
 /* Hero Component Styles */
 
 .hero-section {
-  min-height: calc(100vh - var(--nav-safe-area)); /* Viewport height minus safe area */
+  height: 100vh; /* Exact viewport height */
   padding-top: var(--nav-safe-area); /* Use safe area as top padding */
-  padding-bottom: 5rem;
+  padding-bottom: 0; /* Remove bottom padding */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -121,7 +121,7 @@
   
   .hero-section {
     padding-top: var(--nav-safe-area); /* Use the same safe area variable */
-    padding-bottom: 3rem;
+    padding-bottom: 0; /* Remove bottom padding on mobile too */
   }
   
   .hero-logo {
