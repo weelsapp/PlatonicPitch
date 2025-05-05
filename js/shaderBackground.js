@@ -312,9 +312,9 @@ class ShaderBackground {
       
           float s = 0.5 + 1.24 * (val[3]/2.0 + 0.5);
       
-          // Use 40% lighter RGB values (10% + 10% + 10% + 10%): 0.10910, 0.19521, 0.29282
+          // Use 65% lighter RGB values (40% + 25%): 0.13638, 0.24401, 0.36603
           // Multiplying by 1.2 to make it more visible
-          vec3 hexColor = vec3(0.10910, 0.19521, 0.29282) * 1.2;
+          vec3 hexColor = vec3(0.13638, 0.24401, 0.36603) * 1.2;
           return hexColor * inhex(hscale * uv, hex, s);
       }
       
